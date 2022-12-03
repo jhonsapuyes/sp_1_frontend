@@ -1,51 +1,31 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+//import Layout from "./pages/layout";
+import Home from "./pages/home";
+import Register from "./pages/registers";
+import Login from "./pages/login";
+import Events from "./pages/events";
+import NoPage from "./pages/nopage";
 
-import axios from "axios"
-import "bootstrap/dist/css/bootstrap.min.css"
-import {Fontawesome} from '@fortawesome/react-fontawesome'
-import {faedit, faTrasHAlt} from '@fortawesome/free-solid-svg-icons'
-import {Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
-import {Component} from 'react'
-
-
-const url= "http://localhost:9000/api/usuarios"
-
-class App extends Component {
-
-  state = {data: []}
+export default function App() {
   
-  peticion_get= ()=>{
-    axios.get(url).then(response=>{
-      console.log(response.data)
-    })
-  }
-
-  componentDidMount(){
-    this.peticion_get()
-  }
-
-
-  render(){
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  )
-  };
+    
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" /*element={<Layout />}*/>
+          <Route index element={<Home />}/>
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="events" element={<Events />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

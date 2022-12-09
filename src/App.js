@@ -1,4 +1,4 @@
-//import logo from './logo.svg';
+
 import './App.css';
 
 import axios from "axios"
@@ -9,19 +9,16 @@ import {Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import {Component} from 'react'
 
 
-import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/layout";
 import NoPage from "./components/nopage";
 
  
 const url= "http://localhost:9000/api/usuarios"
-const field_id= 'usu_id'
 
 const url_deportes= "http://localhost:9000/api/deportes"
-const field_id_3= 'dep_id'
 const url_equipos= "http://localhost:9000/api/equipos"
-const field_id_4= 'dep_id'
+
 const url_events= "http://localhost:9000/api/marcadores"
 const field_id_events= 'mar_id'
 
@@ -292,12 +289,15 @@ class App extends Component {
     
   }
 
-//////////////////////
+  //////////////////////
 
   // principal la pueden mover para diseñarla con css o bootstrap
   principal= ()=>{
+    const style_css_prueba = {
+      background: "yellow"
+    } 
     return(  
-      <div>
+      <div style={style_css_prueba}>
         {console.log(this.state.data)}
         {Layout}
 
@@ -332,8 +332,11 @@ class App extends Component {
   }
   // registers la pueden mover para diseñarla con css o bootstrap
   registers= ()=>{ 
+    const style_css_prueba = {
+      background: "yellow"
+    } 
     return(
-      <div>
+      <div style={style_css_prueba}>
         {Layout}
         <div>
         <label htmlFor='usu_email'>EMAIL</label>
@@ -357,9 +360,12 @@ class App extends Component {
     window.location.href="http://localhost:3000/deportescolombia/events"; 
   }
   // login la pueden mover para diseñarla con css o bootstrap
-  login= ()=>{  
+  login= ()=>{ 
+    const style_css_prueba = {
+      background: "yellow"
+    } 
     return(  
-      <div>
+      <div style={style_css_prueba}>
         {Layout}
         <div>
 
@@ -385,12 +391,16 @@ class App extends Component {
   // events la pueden mover para diseñarla con css o bootstrap
   events= ()=>{
 
-    const character__body = {
+    const style_css_hidden = {
       display: "none"
     }
 
+    const style_css_prueba = {
+      background: "yellow"
+    }
+
     return(
-      <div>        
+      <div style={style_css_prueba}>        
         <div>
           <button className='btn btn-success' onClick={() => this.close_sesion()}>CLOSE</button>
         </div>
@@ -419,7 +429,7 @@ class App extends Component {
               {this.state.data_3.map(evento =>{ // pide la data de la peticion_get para mapear
                 return (
                   <tr>
-                    <td style={character__body}>{evento.mar_id}</td>
+                    <td style={style_css_hidden}>{evento.mar_id}</td>
                     <td>{evento.equi_id_1}</td>
                     <td>{evento.mar_equi_1}</td>
                     <td>{evento.equi_id_2}</td>
@@ -526,7 +536,7 @@ class App extends Component {
             <Route index element= {this.principal() } />
             <Route path="register" element={this.registers()} />
             <Route path="login" element={this.login()} />
-            <Route path="events" element={ this.state.auth ? this.events():this.login()} />
+            <Route path="events" element={ this.state.auth ? this.events():this.principal()} />
             <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>

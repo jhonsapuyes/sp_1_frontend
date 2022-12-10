@@ -83,7 +83,7 @@ class App extends Component {
 
   peticion_get= ()=>{
     axios.get(url_events).then(response=>{
-      console.log(response.data)
+      //console.log(response.data)
       this.setState({data:response.data}) //pone la data del response en array
     })
     .catch(error => {
@@ -92,15 +92,19 @@ class App extends Component {
     )
   }
   peticion_get_multi_p= (pt_1)=>{
-    console.log(pt_1)
-    axios.get(url_events+"/"+pt_1+"/p").then(response=>{
-      console.log(response.data)
-      this.setState({data_2:response.data}) //pone la data del response en array
-    })
-    .catch(error => {
-      console.log(error.message)
+    if(pt_1 != ""){
+      axios.get(url_events+"/"+pt_1+"/p").then(response=>{
+        //console.log(response.data)
+        this.setState({data_2:response.data}) //pone la data del response en array
+      })
+      .catch(error => {
+        console.log(error.message)
+      }
+      )
     }
-    )
+    else{
+      alert("ELIGE UN DEPORTE")
+    }
   }
   busqueda_p_p=()=>{
     delete this.state.form_events.equi_id_1
@@ -118,15 +122,19 @@ class App extends Component {
 
   }
   peticion_get_multi_e= (pt_1)=>{
-    console.log(pt_1)
-    axios.get(url_events+"/"+pt_1+"/e").then(response=>{
-      console.log(response.data)
-      this.setState({data_3:response.data}) //pone la data del response en array
-    })
-    .catch(error => {
-      console.log(error.message)
+    if(pt_1 != ""){
+      axios.get(url_events+"/"+pt_1+"/e").then(response=>{
+        //console.log(response.data)
+        this.setState({data_3:response.data}) //pone la data del response en array
+      })
+      .catch(error => {
+        console.log(error.message)
+      }
+      )
     }
-    )
+    else{
+      alert("ELIGE UN DEPORTE")
+    }
   }
     busqueda_p_e=()=>{
     delete this.state.form_events.equi_id_1
@@ -146,23 +154,22 @@ class App extends Component {
 
   peticion_post= async () =>{
     if(this.state.form){
-      //console.log(this.state.form)
-      if(this.state.form.usu_email != undefined){
-        if(this.state.form.usu_clave != undefined){
-          if(this.state.form.usu_nombre != undefined){
+      if(this.state.form.usu_email != "" && this.state.form.usu_email != undefined){
+        if(this.state.form.usu_clave != "" && this.state.form.usu_clave != undefined){
+          if(this.state.form.usu_nombre != "" && this.state.form.usu_nombre != undefined){
             //delete this.state.form.id
 
             await axios.post(url, this.state.form).then((response) =>{
               //  redirige a eventos
               //this.peticion_get()
               this.setState({form:''})
-              //window.location.href="http://localhost:3000/events";        
+              //window.location.href="http://localhost:3000/events";  
+              this.peticion_login()      
             })
             .catch(error => {
               console.log(error.message)
             }
             )
-            //console.log(this.state.form.password)
           }
           else{
             this.setState({form:''})
@@ -178,8 +185,8 @@ class App extends Component {
         this.setState({form:''})
         alert("EMAIL OBLIGATORIO")
       }
-      }
-      else{alert("RELLENA LOS CAMPOS")}
+    }
+    else{alert("RELLENA TODOS LOS CAMPOS")}
   }
 
   peticion_put= async () =>{
@@ -207,34 +214,48 @@ class App extends Component {
     )
   }
   peticion_login= async () =>{
-    //console.log(this.state.form)
+
     delete this.state.form.usu_email
 
-    if(this.state.form.usu_nombre != ''  && this.state.form.usu_clave != ''){
-      await axios.get(url+'/'+this.state.form.usu_nombre+'/'+this.state.form.usu_clave)
-      .then((response) =>{
-        if(response.data[0].respuesta == "not results"){
-          console.log(response.data[0].respuesta)
+    if(this.state.form){
+      if(this.state.form.usu_nombre != ''  && this.state.form.usu_nombre != undefined){
+        if(this.state.form.usu_clave != ''  && this.state.form.usu_clave != undefined){
+          await axios.get(url+'/'+this.state.form.usu_nombre+'/'+this.state.form.usu_clave)
+          .then((response) =>{
+            if(response.data[0].respuesta == "not results"){
+              //console.log(response.data[0].respuesta)
+              this.setState({form:''})
+              alert("DATOS INGRESADOS ERRONEOS")
+            }
+            else{
+              //console.log(response.data[0].usu_nombre)
+              //this.setState({usuario_id: response.data[0].usu_nombre})
+              this.setState({logueado: true})
+              window.localStorage.setItem("tipo", true)
+              window.localStorage.setItem("registro", response.data[0].usu_nombre)
+            }
+          })
+          .catch(error => {
+            console.log(error.message)
+          }
+          )
         }
         else{
-          //console.log(response.data[0].usu_nombre)
-          //this.setState({usuario_id: response.data[0].usu_nombre})
-          this.setState({logueado: true})
-          window.localStorage.setItem("tipo", true)
-          window.localStorage.setItem("registro", response.data[0].usu_nombre)
+          this.setState({form:''})
+          alert("PASSWORD OBLIGATORIO")
         }
-      })
-      .catch(error => {
-        console.log(error.message)
       }
-      )
+      else{
+        this.setState({form:''})
+        alert("NOMBRE OBLIGATORIO")
+      }
     }
-    else{console.log(2)}
+    else{alert("RELLENA TODOS LOS CAMPOS")}
   }
 
   peticion_get_deportes= ()=>{
     axios.get(url_deportes).then(response=>{
-      console.log(response.data)
+      //console.log(response.data)
       this.setState({data_deporte:response.data}) //pone la data del response en array
     })
     .catch(error => {
@@ -244,19 +265,25 @@ class App extends Component {
   }
   peticion_post_deportes= async () =>{
     //alert(this.state.form_events)
-    await axios.post(url_deportes, this.state.form_deportes).then((response) =>{
-      this.peticion_get_deportes()
+    if(this.state.form_deportes.dep_nombre != "" && this.state.form_deportes.dep_nombre != undefined){
+      await axios.post(url_deportes, this.state.form_deportes).then((response) =>{
+        this.peticion_get_deportes()
+        this.setState({form_deportes:''})
+        this.modal_deporte()
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
+    }
+    else{
       this.setState({form_deportes:''})
-      this.modal_deporte()
-    })
-    .catch(error => {
-      console.log(error.message)
-    })
+      alert("DEPORTE OBLIGATORIO")
+    }
     
   }
   peticion_get_equipos= ()=>{
     axios.get(url_equipos).then(response=>{
-      console.log(response.data)
+      //console.log(response.data)
       this.setState({data_equipo:response.data}) //pone la data del response en array
     })
     .catch(error => {
@@ -266,27 +293,98 @@ class App extends Component {
   }
   peticion_post_equipo= async () =>{
     //alert(this.state.form_events)
-    await axios.post(url_equipos, this.state.form_equipos).then((response) =>{
-      this.peticion_get_equipos()
+    if(this.state.form_equipos.equi_nombre != "" && this.state.form_equipos.equi_nombre != undefined){
+      if(this.state.form_equipos.dep_id != "" && this.state.form_equipos.dep_id != undefined){
+        await axios.post(url_equipos, this.state.form_equipos).then((response) =>{
+          this.peticion_get_equipos()
+          this.setState({form_equipos:''})
+          this.modal_equipo()
+        })
+        .catch(error => {
+          console.log(error.message)
+        })
+      }
+      else{
+        this.setState({form_equipos:''})
+        alert("DEPORTE OBLIGATORIO")
+      }
+    }
+    else{
       this.setState({form_equipos:''})
-      this.modal_equipo()
-    })
-    .catch(error => {
-      console.log(error.message)
-    })
-    
+      alert("NOMBRE OBLIGATORIO")
+    }
   }
   peticion_post_events= async () =>{
     //console.log(this.state.form_events)
-    await axios.post(url_events, this.state.form_events).then((response) =>{
-      this.peticion_get()
+
+    if(this.state.form_events.mar_fecha_event != "" && this.state.form_events.mar_fecha_event != undefined){
+      if(this.state.form_events.mar_fecha_registro != "" && this.state.form_events.mar_fecha_registro != undefined){
+        if(this.state.form_events.mar_hora_event != "" && this.state.form_events.mar_hora_event != undefined){ 
+          if(this.state.form_events.mar_hora_registro != "" && this.state.form_events.mar_hora_registro != undefined){ 
+            if(this.state.form_events.equi_id_1 != "" && this.state.form_events.equi_id_1 != undefined){
+              if(this.state.form_events.equi_id_2 != "" && this.state.form_events.equi_id_2 != undefined){
+                if(this.state.form_events.mar_equi_1 != "" && this.state.form_events.mar_equi_1 != undefined){
+                  if(this.state.form_events.mar_equi_2 != "" && this.state.form_events.mar_equi_2 != undefined){
+                    if(this.state.form_events.mar_dep_id != "" && this.state.form_events.mar_dep_id != undefined){
+                      if(this.state.form_events.mar_usu_id != "" && this.state.form_events.mar_usu_id != undefined){
+                        await axios.post(url_events, this.state.form_events).then((response) =>{
+                          this.peticion_get()
+                          this.setState({form_events:''})
+                          this.modal_insertar()
+                        })
+                        .catch(error => {
+                          console.log(error.message)
+                        })
+                      }
+                      else{
+                        this.setState({form_events:''})
+                        alert("NOMBRE USUARIO OBLIGATORIO")
+                      }
+                    }
+                    else{
+                      this.setState({form_events:''})
+                      alert("NOMBRE DEPORTE OBLIGATORIO")
+                    }
+                  }
+                  else{
+                    this.setState({form_events:''})
+                    alert("MARCADOR EQUIPO VISITANTE OBLIGATORIO")
+                  }
+                }
+                else{
+                  this.setState({form_events:''})
+                  alert("MARCADOR EQUIPO LOCAL OBLIGATORIO")
+                }
+              }
+              else{
+                this.setState({form_events:''})
+                alert("EQUIPO VISITANTE OBLIGATORIO")
+              }
+            }
+            else{
+              this.setState({form_events:''})
+              alert("EQUIPO LOCAL OBLIGATORIO")
+            }
+          }
+          else{
+            this.setState({form_events:''})
+            alert("HORA REGISTRO OBLIGATORIO")
+          }
+        }
+        else{
+          this.setState({form_events:''})
+          alert("HORA EVENTO OBLIGATORIO")
+        }
+      }
+      else{
+        this.setState({form_events:''})
+        alert("FECHA REGISTRO OBLIGATORIO")
+      }
+    }  
+    else{
       this.setState({form_events:''})
-      this.modal_insertar()
-    })
-    .catch(error => {
-      console.log(error.message)
-    })
-    
+      alert("FECHA EVENTO OBLIGATORIO")
+    }  
   }
 
   //////////////////////
@@ -295,10 +393,11 @@ class App extends Component {
   principal= ()=>{
     const style_css_prueba = {
       background: "yellow"
+      
     } 
     return(  
       <div style={style_css_prueba}>
-        {console.log(this.state.data)}
+        {/*console.log(this.state.data)*/}
         {Layout}
 
         <div>
@@ -337,6 +436,7 @@ class App extends Component {
     } 
     return(
       <div style={style_css_prueba}>
+        
         {Layout}
         <div>
         <label htmlFor='usu_email'>EMAIL</label>
@@ -465,7 +565,7 @@ class App extends Component {
           [e.target.name]: e.target.value // los nombres de los inputs deben ser iguales
         }
       })
-      console.log(this.state.form) // porbar por consola lo que se guarda
+      //console.log(this.state.form) // porbar por consola lo que se guarda
     }
     if(e.target.name === "dep_nombre"){
       await this.setState({ // await  regresa  la ejecucion dela funcion asincrona despues de la ejecucion
@@ -474,7 +574,7 @@ class App extends Component {
           [e.target.name]: e.target.value // los nombres de los inputs deben ser iguales
         }
       })
-      console.log(this.state.form_deportes) // porbar por consola lo que se guarda
+      //console.log(this.state.form_deportes) // porbar por consola lo que se guarda
     }
     if(e.target.name === "equi_nombre" || e.target.name === "dep_id"){
       await this.setState({ // await  regresa  la ejecucion dela funcion asincrona despues de la ejecucion
@@ -483,10 +583,11 @@ class App extends Component {
           [e.target.name]: e.target.value // los nombres de los inputs deben ser iguales
         }
       })
-      console.log(this.state.form_equipos) // porbar por consola lo que se guarda
+      //console.log(this.state.form_equipos) // porbar por consola lo que se guarda
     }
     if(e.target.name === "equi_id_1" || e.target.name === "equi_id_2"  
       || e.target.name === "mar_fecha_event"  || e.target.name === "mar_fecha_registro"
+      || e.target.name === "mar_hora_event"  || e.target.name === "mar_hora_registro"
       || e.target.name === "mar_equi_1"  || e.target.name === "mar_equi_2"
       || e.target.name === "mar_dep_id"  || e.target.name === "mar_usu_id"){
       await this.setState({ // await  regresa  la ejecucion dela funcion asincrona despues de la ejecucion
@@ -495,7 +596,7 @@ class App extends Component {
           [e.target.name]: e.target.value // los nombres de los inputs deben ser iguales
         }
       })
-      console.log(this.state.form_events) // porbar por consola lo que se guarda
+      //console.log(this.state.form_events) // porbar por consola lo que se guarda
     }
     //console.log(this.state.form_events) // porbar por consola lo que se guarda
     //console.log(this.state.usuario_id)
@@ -527,8 +628,12 @@ class App extends Component {
 
 
   render(){
+    // style_css_prueba no funciona en en div classname="app"
+    const style_css_prueba = {
+      background: "red"
+    } 
     return (  
-      <div className="App">
+      <div className="App" style={style_css_prueba}>
         {this.state.logueado ? this.rdtc_l():"" }
         <BrowserRouter>
           <Routes>
@@ -658,7 +763,7 @@ class App extends Component {
 
                 <label htmlFor='dep_id'>ELIGE DEPORTE</label>
                 <select name="dep_id" onChange={this.handle_change}>
-                  <option value="">ELIGE UN DEPORTE</option>
+                  <option value="" >ELIGE UN DEPORTE</option>
                   {this.state.data_deporte.map(evento =>{ 
                     return (
                       <option value={evento.dep_nombre}>{evento.dep_nombre}</option>

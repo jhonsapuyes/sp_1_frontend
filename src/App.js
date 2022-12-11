@@ -13,7 +13,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 //import Layout from "./components/layout";
 //import NoPage from "./components/nopage";
 import  Menu  from "./components/Menu/Menu"
-import PageInicio from './components/PageInicio';
+import PageInicio from './components/PageInicio/PageInicio';
 import PageDeporte from './components/PageDeporte';
 import PageSesion from './components/PageSesion';
 /*

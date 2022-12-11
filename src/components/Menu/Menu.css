@@ -6,12 +6,9 @@
     list-style: none;
     position: absolute;
     width: 100%;
+    z-index: 10;
 }
-.menu_top a{
-    color: #fff;
-    text-decoration: none;
-    animation: menu_items 1s ease-out;
-}
+
 .menu_img{
     width: 238px;
     height: 132px;
@@ -19,6 +16,7 @@
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
+    animation: menu_items 1s ease-out;
 }
 .menu_img img{
     width: 100%;
@@ -36,8 +34,17 @@
 }
 .menu_item{
     text-align: center;
-    padding: 1em 2em;
     position: relative;
+    animation: menu_items 1s ease-out;
+}
+.menu_item a,
+.menu_item p{
+    color: #fff;
+    display: inline-block;
+    padding: 1em 2em;
+    text-decoration: none;
+    margin: 0;
+    cursor: pointer;
 }
 .submenu_top{
     position: absolute;
@@ -54,9 +61,10 @@
     transform:rotate(360deg);
     transition: all .2s ease-out;
 }
-.submenu_top a{
+.submenu_top li a{
     color: var(--main-color);
     text-align: left;
+    animation: menu_items 1s ease-out;
 }
 
 .menu_item:hover .submenu_top {
@@ -79,20 +87,23 @@
     justify-content: space-between;
     flex-direction: column;
     cursor: pointer;
+    transition: all .3s ease-in;
 }
 .icon_menu_top div{
     width: 100%;
     height: 5px;
     background-color: var(--main-color);
+    transition: all .3s ease-in;
+    
 }
 @media screen and (max-width: 950px) {
     .menu_top{
         flex-direction: column;
         background: #ffffff;
         padding: 0;
-        position: inherit;
     }
-    .menu_top a{
+    .menu_item p,
+    .menu_item a{
         color: var(--main-color);
     }
     .menu_img{
@@ -103,15 +114,17 @@
     }
     .menu_items{
         flex-direction: column;
+        width: 100%;
     }
     .submenu_top{
         position: inherit;
         text-align: center;
         padding: 0;
         border-bottom: 1px solid var(--main-color);
+        background: rgb(247, 247, 247);
     }
     .submenu_top li{
-        padding: 16px 13px;
+        padding: 0px 0px;
     }
     .icon_menu_top{
         display: flex;
@@ -128,11 +141,34 @@
     .item_borde{
         border: none;
     }
+    .active_menu_icon{
+        transform: rotateZ(45deg);
+    }
+    .desactive_menu_icon{
+        transform: rotateZ(0);
+    }
+    .active_menu_icon div:first-child{
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        transform: translateX(50%) translateY(-50%);
+    }
+    .active_menu_icon div:nth-child(2){
+        width: 0;
+    }
+    .active_menu_icon div:last-child{
+        position: absolute;
+        right: 0;
+        top: -40%;
+        transform: rotate(-90deg) translateX(-50%) translateY(0%);
+    }
 }
 @keyframes menu_items {
     0%{
         opacity: 0%;
+        transform: translateY(10px);
     }100%{
         opacity: 100%;
+        transform: translateY(0);
     }
 }

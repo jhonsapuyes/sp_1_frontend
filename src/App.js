@@ -1,30 +1,47 @@
 
 import './App.css';
 
-import axios from "axios"
+//import axios from "axios"
 import "bootstrap/dist/css/bootstrap.min.css"
-import {Fontawesome, FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faEdit, faedit, faTrashAlt, faTrasHAlt} from '@fortawesome/free-solid-svg-icons'
-import {Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+
+//import {faEdit, faedit, faTrashAlt, faTrasHAlt} from '@fortawesome/free-solid-svg-icons'
+//import {Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import {Component} from 'react'
 
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Layout from "./components/layout";
-import NoPage from "./components/nopage";
-
- 
+//import Layout from "./components/layout";
+//import NoPage from "./components/nopage";
+import  Menu  from "./components/Menu/Menu"
+import PageInicio from './components/PageInicio';
+import PageDeporte from './components/PageDeporte';
+import PageSesion from './components/PageSesion';
+/*
 const url= "http://localhost:9000/api/usuarios"
-
 const url_deportes= "http://localhost:9000/api/deportes"
 const url_equipos= "http://localhost:9000/api/equipos"
-
 const url_events= "http://localhost:9000/api/marcadores"
 const field_id_events= 'mar_id'
 
-
+*/
 class App extends Component {
+  render() {
+    return(
+      <>
+        <BrowserRouter >
+          <Menu />
+          <Routes>
+            <Route path="/" element={<PageInicio/>}/>
+            <Route path="/PageInicio" element={<PageInicio/>}/>
+            <Route path="/PageDeporte" element={<PageDeporte/>}/>
+            <Route path="/pageSesion" element={<PageSesion/>}/>
+          </Routes>
+        </BrowserRouter>
+      </>
+    );
+  } 
 
+ /*
   state = {
     modal_insertar: false,
     tipo_modal: '',
@@ -532,7 +549,7 @@ class App extends Component {
         {this.state.logueado ? this.rdtc_l():"" }
         <BrowserRouter>
           <Routes>
-            <Route path="/deportescolombia/" /*element={<Layout />}*/>
+            <Route path="/deportescolombia/" /*element={<Layout />}*/ /*>
             <Route index element= {this.principal() } />
             <Route path="register" element={this.registers()} />
             <Route path="login" element={this.login()} />
@@ -677,7 +694,7 @@ class App extends Component {
       </div>
     )
   };
-
+ */
+  
 }
-
 export default App;

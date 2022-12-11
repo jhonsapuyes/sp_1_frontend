@@ -1,4 +1,8 @@
 
+
+
+
+
 import './App.css';
 
 import axios from "axios"
@@ -69,19 +73,20 @@ class App extends Component {
     usuario_n:""
   }
 
-  modal_insertar = () =>{
+  
+  modal_insertar = () =>{  // esta f va en page eventos
     this.setState({modal_insertar: !this.state.modal_insertar})
   }
-  modal_deporte = () =>{
+  modal_deporte = () =>{   // esta f va en page eventos
     this.setState({modal_dep: !this.state.modal_dep})
     this.setState({form_deportes: ""})
   }
-  modal_equipo = () =>{
+  modal_equipo = () =>{    // esta f va en page eventos
     this.setState({modal_equi: !this.state.modal_equi})
     this.setState({form_equipos: ""})
   }
 
-  peticion_get= ()=>{
+  peticion_get= ()=>{ // esta en peticion_put, peticion_post_events, componentDidMount
     axios.get(url_events).then(response=>{
       //console.log(response.data)
       this.setState({data:response.data}) //pone la data del response en array
@@ -91,7 +96,7 @@ class App extends Component {
     }
     )
   }
-  peticion_get_multi_p= (pt_1)=>{
+  peticion_get_multi_p= (pt_1)=>{ // esta en busqueda_p_p, componentDidMount
     if(pt_1 != ""){
       axios.get(url_events+"/"+pt_1+"/p").then(response=>{
         //console.log(response.data)
@@ -106,7 +111,7 @@ class App extends Component {
       alert("ELIGE UN DEPORTE")
     }
   }
-  busqueda_p_p=()=>{
+  busqueda_p_p=()=>{ // esta en principal
     delete this.state.form_events.equi_id_1
     delete this.state.form_events.equi_id_2
     delete this.state.form_events.mar_equi_1
@@ -121,7 +126,7 @@ class App extends Component {
     this.peticion_get_multi_p(this.state.form_events.mar_dep_id)
 
   }
-  peticion_get_multi_e= (pt_1)=>{
+  peticion_get_multi_e= (pt_1)=>{ // esta en busqueda_p_e, componentDidMount
     if(pt_1 != ""){
       axios.get(url_events+"/"+pt_1+"/e").then(response=>{
         //console.log(response.data)
@@ -136,7 +141,7 @@ class App extends Component {
       alert("ELIGE UN DEPORTE")
     }
   }
-    busqueda_p_e=()=>{
+    busqueda_p_e=()=>{ //esta en events
     delete this.state.form_events.equi_id_1
     delete this.state.form_events.equi_id_2
     delete this.state.form_events.mar_equi_1
@@ -152,7 +157,7 @@ class App extends Component {
 
   }
 
-  peticion_post= async () =>{
+  peticion_post= async () =>{ //esta en registers
     if(this.state.form){
       if(this.state.form.usu_email != "" && this.state.form.usu_email != undefined){
         if(this.state.form.usu_clave != "" && this.state.form.usu_clave != undefined){
@@ -189,7 +194,7 @@ class App extends Component {
     else{alert("RELLENA TODOS LOS CAMPOS")}
   }
 
-  peticion_put= async () =>{
+  peticion_put= async () =>{ //esta en render modal_insertar
       const id= this.state.form_events.mar_id
       delete this.state.form_events.mar_id
       await axios.put(url_events+'/'+field_id_events+'/'+id, this.state.form_events)
@@ -204,7 +209,7 @@ class App extends Component {
       )
   }
 
-  peticion_get_usuarios= ()=>{
+  peticion_get_usuarios= ()=>{ // esta en componentDidMount
     axios.get(url).then(response=>{
       this.setState({data_usuario:response.data}) //pone la data del response en array
     })
@@ -213,7 +218,7 @@ class App extends Component {
     }
     )
   }
-  peticion_login= async () =>{
+  peticion_login= async () =>{ // esta en peticion_post, login
 
     delete this.state.form.usu_email
 
@@ -253,7 +258,7 @@ class App extends Component {
     else{alert("RELLENA TODOS LOS CAMPOS")}
   }
 
-  peticion_get_deportes= ()=>{
+  peticion_get_deportes= ()=>{ // esta en peticion_post_deportes, componentDidMount
     axios.get(url_deportes).then(response=>{
       //console.log(response.data)
       this.setState({data_deporte:response.data}) //pone la data del response en array
@@ -263,7 +268,7 @@ class App extends Component {
     }
     )
   }
-  peticion_post_deportes= async () =>{
+  peticion_post_deportes= async () =>{ // esta en render modal_dep
     //alert(this.state.form_events)
     if(this.state.form_deportes.dep_nombre != "" && this.state.form_deportes.dep_nombre != undefined){
       await axios.post(url_deportes, this.state.form_deportes).then((response) =>{
@@ -281,7 +286,7 @@ class App extends Component {
     }
     
   }
-  peticion_get_equipos= ()=>{
+  peticion_get_equipos= ()=>{ // esta en peticion_post_equipo, componentDidMount
     axios.get(url_equipos).then(response=>{
       //console.log(response.data)
       this.setState({data_equipo:response.data}) //pone la data del response en array
@@ -291,7 +296,7 @@ class App extends Component {
     }
     )
   }
-  peticion_post_equipo= async () =>{
+  peticion_post_equipo= async () =>{ // // esta en render modal_equi
     //alert(this.state.form_events)
     if(this.state.form_equipos.equi_nombre != "" && this.state.form_equipos.equi_nombre != undefined){
       if(this.state.form_equipos.dep_id != "" && this.state.form_equipos.dep_id != undefined){
@@ -314,7 +319,7 @@ class App extends Component {
       alert("NOMBRE OBLIGATORIO")
     }
   }
-  peticion_post_events= async () =>{
+  peticion_post_events= async () =>{ // esta en render modal_insertar
     //console.log(this.state.form_events)
 
     if(this.state.form_events.mar_fecha_event != "" && this.state.form_events.mar_fecha_event != undefined){
@@ -390,7 +395,7 @@ class App extends Component {
   //////////////////////
 
   // principal la pueden mover para diseñarla con css o bootstrap
-  principal= ()=>{
+  principal= ()=>{ //esta en render(routes)
     const style_css_prueba = {
       background: "yellow"
       
@@ -430,7 +435,7 @@ class App extends Component {
     )
   }
   // registers la pueden mover para diseñarla con css o bootstrap
-  registers= ()=>{ 
+  registers= ()=>{ //esta en render(routes) 
     const style_css_prueba = {
       background: "yellow"
     } 
@@ -456,11 +461,11 @@ class App extends Component {
     )
   }
 
-  rdtc_l= ()=>{
+  rdtc_l= ()=>{ // esta en login
     window.location.href="http://localhost:3000/deportescolombia/events"; 
   }
   // login la pueden mover para diseñarla con css o bootstrap
-  login= ()=>{ 
+  login= ()=>{ //esta en render(routes) 
     const style_css_prueba = {
       background: "yellow"
     } 
@@ -483,13 +488,13 @@ class App extends Component {
     )
   }
 
-  close_sesion=()=>{
+  close_sesion=()=>{ // esta en events
     this.setState({auth: ""})
     window.localStorage.setItem("tipo", "")
     window.localStorage.setItem("registro", "")
   }
   // events la pueden mover para diseñarla con css o bootstrap
-  events= ()=>{
+  events= ()=>{ //esta en render(routes)
 
     const style_css_hidden = {
       display: "none"
@@ -555,7 +560,7 @@ class App extends Component {
   ///////////////////////////
 
 
-  handle_change= async e =>{ 
+  handle_change= async e =>{ // esta en principal, registers, login, events, render( modal_insertar, modal_dep, modal_equi )
     e.persist(); // por eso debemos  especificar persistencia
 
     if(e.target.name == "usu_email" || e.target.name == "usu_clave" || e.target.name == "usu_nombre"){
@@ -602,7 +607,7 @@ class App extends Component {
     //console.log(this.state.usuario_id)
   }
 
-  selecionar_evento= (evento) =>{
+  selecionar_evento= (evento) =>{ // esta en events
     this.setState({
       tipo_modal: 'actualizar',
       form_events: {

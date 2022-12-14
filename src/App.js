@@ -466,6 +466,7 @@ class App extends Component {
   }
   // login la pueden mover para diseñarla con css o bootstrap
   login= ()=>{ //esta en render(routes) 
+    //this.setState({ form: ""})
     const style_css_prueba = {
       background: "yellow"
     } 

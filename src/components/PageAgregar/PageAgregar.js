@@ -14,6 +14,7 @@ const url_equipos= "http://localhost:9000/api/"
 const cookies = new Cookies();
 
 class PageAgregar extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -48,14 +49,14 @@ class PageAgregar extends Component {
       (cookies.get('agregar_menu') === "equipos")?
       delete this.state.form_deporte.dep_id: delete this.state.form_equipo.equi_id; //esto borra el campo mar_id
       (cookies.get('agregar_menu') === "equipos")?   
-      await axios.post(url_deportes+cookies.get('agregar_menu'), this.state.form_deporte).then(response => {
+      await axios.post(url_deportes+cookies.get('agregar_menu'), this.state.form_equipo).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
       :
-      await axios.post(url_deportes+cookies.get('agregar_menu'), this.state.form_equipo).then(response => {
+      await axios.post(url_deportes+cookies.get('agregar_menu'), /*AQUI ESTABA EL FALLO*/this.state.form_deporte).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
@@ -112,20 +113,20 @@ class PageAgregar extends Component {
     handleChange = async e=>{  /// función para capturar los datos del usuario. Es en 2do plano debe ser asincrona
       e.persist();
       (cookies.get('agregar_menu') === "equipos")?      /// y por eso debemos especificar persistencia
-      await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
-        form:{
-          ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
-          [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
-        }
-      })
+        await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
+          form_equipo:{
+            ...this.state.form_equipo, /// esta linea sirve para conservar los datos que ya tenia el arreglo
+            [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
+          }
+        })
       :
-      await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
-        form:{
-          ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
-          [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
-        }
-      })
-      console.log(this.state.form);  /// probar por consola lo que se guarda
+        await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
+          form_deporte:{
+            ...this.state.form_deporte, /// esta linea sirve para conservar los datos que ya tenia el arreglo
+            [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
+          }
+        })
+      console.log(this.state.form_equipo);  /// probar por consola lo que se guarda
     }
   
     //se ejecuta cuando lo realiza
@@ -200,16 +201,17 @@ class PageAgregar extends Component {
               {(this.state.ventana === 'equipos')?
               <div>
               <label htmlFor="equi_id">ID</label>
-              <input className="form-control" type="text" name="equi_id" id="equi_id" readOnly onChange={this.handleChange} value = {form ? form.equi_id : this.state.data.length+1}></input>
+              {/*EN TODOS LOS VALUE ESTABA EL FALLO */}
+              <input className="form-control" type="text" name="equi_id" id="equi_id" readOnly onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_id : this.state.data.length+1}></input>
               <br />
               <label htmlFor="equi_nombre">nombre</label>
-              <input className="form-control" type="text" name="equi_nombre" id="equi_nombre" onChange={this.handleChange} value = {form ? form.equi_nombre : ''}></input>
+              <input className="form-control" type="text" name="equi_nombre" id="equi_nombre" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_nombre : ''}></input>
               <br />
               <label htmlFor="equi_img">Logo</label>
-              <input className="form-control" type="text" name="equi_img" id="equi_img" onChange={this.handleChange} value = {form ? form.equi_img : ''}></input>
+              <input className="form-control" type="text" name="equi_img" id="equi_img" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_img : ''}></input>
               <br />
               <label htmlFor="dep_id">Deporte</label>
-              <input className="form-control" type="text" name="dep_id" id="dep_id" onChange={this.handleChange} value = {form ? form.dep_id : ''}></input>
+              <input className="form-control" type="text" name="dep_id" id="dep_id" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.dep_id : ''}></input>
               <br />
             </div>
             :
@@ -218,7 +220,7 @@ class PageAgregar extends Component {
                 <input className="form-control" type="text" name="dep_id" id="dep_id" readOnly onChange={this.handleChange} value = {form ? form.dep_id : this.state.data.length+1}></input>
                 <br />
                 <label htmlFor="dep_nombre">Deporte</label>
-                <input className="form-control" type="text" name="dep_nombre" id="dep_nombre" onChange={this.handleChange} value = {form ? form.dep_nombre : ''}></input>
+                <input className="form-control" type="text" name="dep_nombre" id="dep_nombre" onChange={this.handleChange} value = {this.state.form_deporte.dep_nombre ? this.state.form_deporte.dep_nombre : ''}></input>
                 <br />
                 
               </div>

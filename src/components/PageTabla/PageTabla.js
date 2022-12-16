@@ -12,6 +12,7 @@ const field_id = '/mar_id/'
 const url= "http://localhost:9000/api/marcadores";
 
 class PageTabla extends Component {
+  
     constructor(props) {
         super(props);
         this.state = {

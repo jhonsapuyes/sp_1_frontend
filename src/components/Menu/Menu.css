@@ -96,6 +96,40 @@
     transition: all .3s ease-in;
     
 }
+.user_login{
+    position: relative;
+}
+.user_login > svg{
+    color: #ffffff;
+    font-size: 2em;
+    cursor: pointer;
+}
+.submenu_login{
+    list-style: none;
+    padding: 1em;
+    margin: 0;
+    background-color: #fff;
+    position: absolute;
+    width: 300px;
+    left: -250px;
+    top: 100%;
+}
+.submenu_item a{
+    color: var(--main-color);
+    padding: 12px 0;
+}
+.submenu_item{
+    text-align-last: left;
+}
+.submenu_header span{
+    font-size: 0.8em;
+}
+.log-out{
+    cursor: pointer;
+}
+.desactive_iconUser{
+    display: none;
+}
 @media screen and (max-width: 950px) {
     .menu_top{
         flex-direction: column;
@@ -161,6 +195,14 @@
         right: 0;
         top: -40%;
         transform: rotate(-90deg) translateX(-50%) translateY(0%);
+    }
+    .user_login{
+        position: absolute;
+        top: 1.6em;
+        left: 1.6em;
+    }
+    .user_login > svg{
+        color: var(--main-color);
     }
 }
 @keyframes menu_items {

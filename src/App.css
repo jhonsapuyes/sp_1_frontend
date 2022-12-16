@@ -1,5 +1,6 @@
 :root {
   --main-color: #182127;
+  --rojo-color: #FD2103;
 }
 *, ::before, ::after{
   margin: 0;

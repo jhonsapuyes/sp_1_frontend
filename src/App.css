@@ -1,15 +1,16 @@
-.App {
-  text-align: center;
+:root {
+  --main-color: #182127;
+  --rojo-color: #FD2103;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+*, ::before, ::after{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 body{
-  background: rgb(97, 158, 110) !important;
+  background: var(--main-color) !important;
+  font-family: 'Poppins', sans-serif !important;
 }
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

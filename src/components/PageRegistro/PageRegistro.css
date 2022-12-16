@@ -1,0 +1,22 @@
+.containerPrincipal.containerPrincipal {
+    position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid white;
+      padding: 40px;
+      background-color: white;
+      margin-top: 50px;
+      background-color: #25363f;       
+  }
+  
+  .containerSecundario{
+    text-align: center;
+    background-color: #25363f; 
+  }
+
+  label{
+    color: white;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: large;
+  }

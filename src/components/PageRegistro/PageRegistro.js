@@ -81,7 +81,6 @@ class PageRegistro extends Component {
                         onChange={this.handleChange}
                     />
                     <br />
-                    <br />
                     <label>Nombre: </label>
                     <br />
                     <input
@@ -90,6 +89,7 @@ class PageRegistro extends Component {
                         name="usu_nombre"
                         onChange={this.handleChange}
                     />
+                    <br />
                     <button className="btn btn-primary" onClick={() => this.suscribirse()}>Registrarse</button>
                 </div>
             </div>

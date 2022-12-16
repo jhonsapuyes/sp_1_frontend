@@ -17,6 +17,7 @@ import PageDeporte from './components/PageDeporte/PageDeporte';
 import PageSesion from './components/PageSesion/PageSesion';
 import PageUsuarios from './components/PageUsuarios/PageUsuarios';
 import PageTabla from './components/PageTabla/PageTabla';
+import PageRegistro from'./components/PageRegistro/PageRegistro';
 import NoPage from './components/NoPage/NoPage';
 import PageAgregar from './components/PageAgregar/PageAgregar';
 import Cookies from 'universal-cookie'
@@ -37,6 +38,7 @@ render() {
             <Route path="/PageUsuarios" element={<PageUsuarios/>}/>
             <Route path="/PageTabla" element={<PageTabla/>}/>
             <Route path="/PageAgregar" element={<PageAgregar/>}/>
+            <Route path="/PageRegistro" element={<PageRegistro/>}/>
             <Route path="*" element={<NoPage/>} />
           </Routes>
         </BrowserRouter>

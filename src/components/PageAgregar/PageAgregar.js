@@ -6,10 +6,10 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Component } from 'react';
 import "./PageAgregar.css";
 import Cookies from 'universal-cookie';
-const field_id = '/dep_id/'
 
-const url_deportes= "http://localhost:9000/api/"
-const url_equipos= "http://localhost:9000/api/"
+
+const url= "http://localhost:9000/api/"
+
 
 const cookies = new Cookies();
 
@@ -22,22 +22,17 @@ class PageAgregar extends Component {
           modalEliminar: false,
           tipoModal:'',
           ventana: 'deportes',
-          form_deporte:{
+          field_id: 'dep_id/',
+          form:{
             dep_id: '',
             dep_nombre: "",
-          },
-          form_equipo:{
-            equi_id: '',
-            equi_nombre: "",
-            equi_img: "",
-            dep_id: "",
           }
         };
     }
 
 
     peticionGet = () => {
-      axios.get(url_deportes+cookies.get('agregar_menu')).then(response => {
+      axios.get(url+cookies.get('agregar_menu')).then(response => {
         this.setState({data:response.data})
       }).catch(error => {
         console.log(error.message);
@@ -45,26 +40,27 @@ class PageAgregar extends Component {
     }
   
     peticionPost = async () => {
-      (cookies.get('agregar_menu') === "equipos")?
-      delete this.state.form_deporte.dep_id: delete this.state.form_equipo.equi_id; //esto borra el campo mar_id
-      (cookies.get('agregar_menu') === "equipos")?   
-      await axios.post(url_deportes+cookies.get('agregar_menu'), this.state.form_deporte).then(response => {
+      (cookies.get('agregar_menu') === "deportes")?
+      delete this.state.form.dep_id: delete this.state.form.equi_id; //esto borra el campo mar_id
+      await axios.post(url+cookies.get('agregar_menu'), this.state.form).then(response => {
+        this.modalInsertar()
+        this.peticionGet()
+      }).catch(error => {
+        console.log(error.message);
+      })
+      
+    }
+  
+    peticionPut = () => {
+      (cookies.get('agregar_menu') === "deportes")?
+      axios.put(url+this.state.ventana+"/"+this.state.field_id+this.state.form.dep_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
       :
-      await axios.post(url_deportes+cookies.get('agregar_menu'), this.state.form_equipo).then(response => {
-        this.modalInsertar()
-        this.peticionGet()
-      }).catch(error => {
-        console.log(error.message);
-      })
-    }
-  
-    peticionPut = () => {
-      axios.put(url_deportes+field_id+this.state.form.mar_id,this.state.form).then(response => {
+      axios.put(url+this.state.ventana+"/"+this.state.field_id+this.state.form.equi_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
@@ -73,7 +69,15 @@ class PageAgregar extends Component {
     }
   
     peticionDelete = () => {
-      axios.delete(url_deportes+field_id+this.state.form.mar_id).then(response => {
+      (cookies.get('agregar_menu') === "deportes")?
+      axios.delete(url+this.state.ventana+"/"+this.state.field_id+this.state.form.dep_id).then(response => {
+        this.modalEliminar()
+        this.peticionGet()
+      }).catch(error => {
+        console.log(error.message);
+      })
+      :
+      axios.delete(url+this.state.ventana+"/"+this.state.field_id+this.state.form.equi_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {
@@ -83,10 +87,10 @@ class PageAgregar extends Component {
   
   
     seleccionarUsuario=(equipo)=>{
-      (cookies.get('agregar_menu') === "equipos")? 
+      (cookies.get('agregar_menu') === "deportes")? 
       this.setState({
         tipoModal: 'actualizar',
-        form_deporte: {
+        form: {
           dep_id: equipo.dep_id,
           dep_nombre: equipo.dep_nombre,
         }
@@ -94,9 +98,11 @@ class PageAgregar extends Component {
       :
       this.setState({
         tipoModal: 'actualizar',
-        form_equipo: {
+        form: {
+          equi_id: equipo.equi_id,
+          equi_nombre: equipo.equi_nombre,
+          equi_img: equipo.equi_img,
           dep_id: equipo.dep_id,
-          dep_nombre: equipo.dep_nombre,
         }
       })
     }
@@ -110,15 +116,7 @@ class PageAgregar extends Component {
     }
   
     handleChange = async e=>{  /// función para capturar los datos del usuario. Es en 2do plano debe ser asincrona
-      e.persist();
-      (cookies.get('agregar_menu') === "equipos")?      /// y por eso debemos especificar persistencia
-      await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
-        form:{
-          ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
-          [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
-        }
-      })
-      :
+      e.persist();     /// y por eso debemos especificar persistencia
       await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
         form:{
           ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
@@ -128,9 +126,28 @@ class PageAgregar extends Component {
       console.log(this.state.form);  /// probar por consola lo que se guarda
     }
   
+    detectarAgregar(agregar){
+      this.setState({ventana: agregar});
+      if(agregar === "deportes"){
+        this.setState({field_id: "dep_id/"});
+        this.setState({form:{
+          dep_id: '',
+          dep_nombre: "",
+        }})
+      }else{
+        this.setState({field_id: "equi_id/"});
+        this.setState({form:{
+          equi_id: '',
+          equi_nombre: "",
+          equi_img: "",
+          dep_id: "",
+        }})
+      }
+    }
+
     //se ejecuta cuando lo realiza
     componentDidMount(){
-      this.setState({ventana: cookies.get('agregar_menu')});
+      this.detectarAgregar(cookies.get('agregar_menu'));
       this.peticionGet();
     }
   
@@ -179,7 +196,7 @@ class PageAgregar extends Component {
             }):
             this.state.data.map(deporte => {
                 return(
-                  <tr key={deporte.dep_id}>
+                  <tr key={deporte.equipo}>
                     <td>{deporte.dep_id}</td> 
                     <td>{deporte.dep_nombre}</td> 
                     <td><button className="btn btn-primary"><FontAwesomeIcon icon={faEdit} onClick = {()=>{this.seleccionarUsuario(deporte); this.modalInsertar()}}/></button>

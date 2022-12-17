@@ -20,6 +20,7 @@ class PageTabla extends Component {
           modalEliminar: false,
           tipoModal:'',
           deporte: "",
+          today: new Date(),
           form:{
             mar_id: '',
             mar_fecha_even: "",
@@ -30,6 +31,8 @@ class PageTabla extends Component {
             equi_id_2: '',
             mar_equi_1: '',
             mar_equi_2: '',
+            equi_img_1: '',
+            equi_img_2: '',
             mar_dep_id: '',
             mar_usu_id: ''
           }
@@ -81,15 +84,14 @@ class PageTabla extends Component {
         form: {
             mar_id: marcador.mar_id,
             mar_fecha_event: marcador.mar_fecha_event,
-            mar_fecha_registro: marcador.mar_fecha_registro,
             mar_hora_event:marcador.mar_hora_event,
-            mar_hora_registro: marcador.mar_hora_registro,
             mar_equi_1: marcador.mar_equi_1,
             mar_equi_2: marcador.mar_equi_2,
             equi_id_1: marcador.equi_id_1,
             equi_id_2: marcador.equi_id_2,
             mar_dep_id: marcador.mar_dep_id,
-            mar_dep_id: marcador.mar_dep_id
+            equi_img_1: marcador.equi_img_1,
+            equi_img_2: marcador.equi_img_2,
         }
       })
     }
@@ -107,7 +109,11 @@ class PageTabla extends Component {
       await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
         form:{
           ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
-          [e.target.name]: e.target.value  /// los nombres de los imputs deben ser iguales a los del arreglo
+          [e.target.name]: e.target.value,  /// los nombres de los imputs deben ser iguales a los del arreglo
+          mar_fecha_registro: this.state.today.toISOString(),
+          mar_hora_registro: this.state.today.toLocaleTimeString('en-US'),
+          mar_dep_id: cookies.get('deporte_menu'),
+          mar_usu_id: cookies.get('usu_nombre'),
         }
       });
       console.log(this.state.form);  /// probar por consola lo que se guarda
@@ -127,7 +133,11 @@ class PageTabla extends Component {
       return (
         <div className="App content_tabla" >
           <br /><br /><br />
-          <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.deporte}`}</button>
+          {cookies.get('usu_nombre')?
+                  <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.deporte}`}</button>
+                  :
+                  <></>
+          }
           <br /><br />
           <table className="table tabla">
           <thead>
@@ -137,7 +147,11 @@ class PageTabla extends Component {
               <th>Equipo 2</th>
               <th>Marcador 2</th>
               <th>Fecha</th>
-              <th>Acciones</th>
+              {cookies.get('usu_nombre')?
+                <th>Acciones</th>
+                :
+                <></>
+              }
             </tr>
           </thead>
           <tbody>
@@ -149,10 +163,15 @@ class PageTabla extends Component {
                   <td>{marcador.equi_id_2}</td> 
                   <td>{marcador.mar_equi_2}</td>
                   <td>{marcador.mar_fecha_event}</td>
+                  {cookies.get('usu_nombre')?
                   <td><button className="btn btn-primary"><FontAwesomeIcon icon={faEdit} onClick = {()=>{this.seleccionarUsuario(marcador); this.modalInsertar()}}/></button>
-                      {" "}
-                      <button className="btn btn-danger"><FontAwesomeIcon icon={faTrashAlt} onClick = {()=>{this.seleccionarUsuario(marcador); this.modalEliminar()}}/></button>
+                    {" "}
+                    <button className="btn btn-danger"><FontAwesomeIcon icon={faTrashAlt} onClick = {()=>{this.seleccionarUsuario(marcador); this.modalEliminar()}}/></button>
                   </td> 
+                  :
+                  <></>
+                }
+                  
                 </tr>
               )
             })}
@@ -163,7 +182,7 @@ class PageTabla extends Component {
             <ModalHeader style={{display:'block'}}>
             </ModalHeader>
             <ModalBody>
-              <div>
+            <div>
                 <label htmlFor="mar_id">ID</label>
                 <input className="form-control" type="text" name="mar_id" id="mar_id" readOnly onChange={this.handleChange} value = {form ? form.mar_id : this.state.data.length+1}></input>
                 <br />
@@ -172,6 +191,12 @@ class PageTabla extends Component {
                 <br />
                 <label htmlFor="equi_id_2">Equipo 2</label>
                 <input className="form-control" type="text" name="equi_id_2" id="equi_id_2" onChange={this.handleChange} value = {form ? form.equi_id_2 : ''}></input>
+                <br />
+                <label htmlFor="equi_img_1">Logo 1</label>
+                <input className="form-control" type="url" name="equi_img_1" id="equi_img_1" onChange={this.handleChange} value = {form ? form.equi_img_1 : ''}></input>
+                <br />
+                <label htmlFor="equi_img_2">Logo 2</label>
+                <input className="form-control" type="url" name="equi_img_2" id="equi_img_2" onChange={this.handleChange} value = {form ? form.equi_img_2 : ''}></input>
                 <br />
                 <label htmlFor="mar_equi_1">mar_equi_1</label>
                 <input className="form-control" type="text" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChange} value = {form ? form.mar_equi_1 : ''}></input>
@@ -183,19 +208,7 @@ class PageTabla extends Component {
                 <input className="form-control" type="date" name="mar_fecha_event" id="mar_fecha_event" onChange={this.handleChange} value = {form ? form.mar_fecha_event : ''}></input>
                 <br />
                 <label htmlFor="mar_hora_event">mar_hora_event</label>
-                <input className="form-control" type="date" name="mar_hora_event" id="mar_hora_event" onChange={this.handleChange} value = {form ? form.mar_hora_event : ''}></input>
-                <br />
-                <label htmlFor="mar_hora_registro">mar_hora_registro</label>
-                <input className="form-control" type="time" name="mar_hora_registro" id="mar_hora_registro" onChange={this.handleChange} value = {form ? form.mar_hora_registro : ''}></input>
-                <br />
-                <label htmlFor="mar_fecha_registro">mar_fecha_registro</label>
-                <input className="form-control" type="time" name="mar_fecha_registro" id="mar_fecha_registro" onChange={this.handleChange} value = {form ? form.mar_fecha_registro : ''}></input>
-                <br />
-                <label htmlFor="mar_dep_id">mar_dep_id</label>
-                <input className="form-control" type="text" name="mar_dep_id" id="mar_dep_id" onChange={this.handleChange} value = {form ? form.mar_dep_id : ''}></input>
-                <br />
-                <label htmlFor="mar_usu_id">mar_usu_id</label>
-                <input className="form-control" type="text" name="mar_usu_id" id="mar_usu_id" onChange={this.handleChange} value = {form ? form.mar_usu_id : ''}></input>
+                <input className="form-control" type="time" name="mar_hora_event" id="mar_hora_event" onChange={this.handleChange} value = {form ? form.mar_hora_event : ''}></input>
                 <br />
               </div>
             </ModalBody>

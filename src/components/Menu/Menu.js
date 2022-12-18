@@ -148,7 +148,7 @@ class Menu extends Component{
                 <Link to='/PageSesion'>Iniciar sesión</Link>
               </li>
               <li className="menu_item item_borde">
-                <Link to='/PageSesion'>Inscribirse</Link>
+                <Link to='/PageRegistro'>Registrarse</Link>
               </li>
             </ul>
           }

@@ -48,7 +48,7 @@ class PageAgregar extends Component {
       }).catch(error => {
         console.log(error.message);
       })
-      
+      window.location.href='./PageAgregar';
     }
   
     peticionPut = () => {
@@ -66,6 +66,7 @@ class PageAgregar extends Component {
       }).catch(error => {
         console.log(error.message);
       })
+      window.location.href='./PageAgregar';
     }
   
     peticionDelete = () => {
@@ -83,6 +84,7 @@ class PageAgregar extends Component {
       }).catch(error => {
         console.log(error.message);
       })
+      window.location.href='./PageAgregar';
     }
   
   

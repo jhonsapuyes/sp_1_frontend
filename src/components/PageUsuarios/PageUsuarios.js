@@ -158,8 +158,8 @@ class PageUsuarios extends Component {
                 <label htmlFor="usu_nombre">Nombres</label>
                 <input className="form-control" type="text" name="usu_nombre" id="usu_nombre" onChange={this.handleChange} value = {form ? form.usu_nombre : ''}></input>
                 <br />
-                <label htmlFor="usu_nombre">Acesso</label>
-                <input className="form-control" type="text" name="usu_nombre" id="usu_nombre" onChange={this.handleChange} value = {form ? form.usu_nombre : ''}></input>
+                <label htmlFor="usu_access">Acesso</label>
+                <input className="form-control" type="text" name="usu_access" id="usu_access" onChange={this.handleChange} value = {form ? form.usu_access : ''}></input>
                 <br />
               </div>
             </ModalBody>

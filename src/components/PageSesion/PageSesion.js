@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios"
 import './PageSesion.css'
+import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie'
 
 const cookies = new Cookies();
@@ -71,6 +72,7 @@ iniciarSesion=async()=>{
                     <input type="password" name="password" id='password' onChange={this.handleChange}></input>
                     <button className='boton-login' onClick={() => this.iniciarSesion()}>LOGIN</button>
                   </form>
+                  <p>¿Todavía no tienes una cuenta? <Link to="/PageRegistro">Regístrate</Link> </p>
                 </div>
                 <div className="formulario_img">
                   <img src="./assets/img_login.png"/>

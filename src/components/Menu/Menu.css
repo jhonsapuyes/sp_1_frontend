@@ -116,10 +116,15 @@
 }
 .submenu_item a{
     color: var(--main-color);
-    padding: 12px 0;
+    padding: 12px 1em;
+    display: inline-block;
+    text-decoration: none;
 }
 .submenu_item{
     text-align-last: left;
+}
+.submenu_header{
+    text-align: center;
 }
 .submenu_header span{
     font-size: 0.8em;
@@ -203,6 +208,10 @@
     }
     .user_login > svg{
         color: var(--main-color);
+    }
+    .submenu_login{
+        flex-direction: column;
+        left: -30px;
     }
 }
 @keyframes menu_items {

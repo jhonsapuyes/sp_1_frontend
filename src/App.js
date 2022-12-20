@@ -1,8 +1,3 @@
-
-
-
-
-
 import './App.css';
 
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -25,6 +20,8 @@ const cookies = new Cookies();
 
 class App extends Component {
 
+
+
 render() {
     return(
       <>
@@ -35,9 +32,9 @@ render() {
             <Route path="/PageInicio" element={<PageInicio/>}/>
             <Route path="/PageDeporte" element={<PageDeporte/>}/>
             <Route path="/PageSesion" element={ <PageSesion/>}/>
-            <Route path="/PageUsuarios" element={<PageUsuarios/>}/>
+            <Route path="/PageUsuarios" element={((cookies.get("usu_access") === "Admin")? <PageUsuarios/>: <PageInicio/> )}/>
             <Route path="/PageTabla" element={<PageTabla/>}/>
-            <Route path="/PageAgregar" element={<PageAgregar/>}/>
+            <Route path="/PageAgregar" element={((cookies.get("usu_access") === "Admin")? <PageAgregar/>: <PageInicio/> )}/>
             <Route path="/PageRegistro" element={<PageRegistro/>}/>
             <Route path="*" element={<NoPage/>} />
           </Routes>
@@ -46,6 +43,5 @@ render() {
       </>
     );
   }
-
 }
 export default App;

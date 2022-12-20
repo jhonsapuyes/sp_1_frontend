@@ -124,7 +124,7 @@ class Menu extends Component{
             </li>
           </ul>
           {this.state.logueado
-          ?<div className={`menu_item user_login ${this.state.menu} ${this.state.logueado}`}>
+          ?<div className={`user_login ${this.state.logueado}`}>
             <FontAwesomeIcon  onClick={this.userLogActive} icon={faCircleUser}/>
             <ul className={`submenu_login ${this.state.iconUser}`}>
                 <li className="submenu_header">{cookies.get('usu_nombre')}<br/> <span>{cookies.get('usu_access')}</span> </li>

@@ -186,7 +186,7 @@ class PageAgregar extends Component {
               return(
                 <tr key={equipo.equi_id}>
                   <td>{equipo.equi_id}</td>
-                  <td><img className="tabla_img" src={(equipo.equi_img)?equipo.equi_img:"./assets/Logo192.png"}/></td>
+                  <td><img className="tabla_img" src={(equipo.equi_img)?equipo.equi_img:"./assets/Logo_default.png"}/></td>
                   <td>{equipo.equi_nombre}</td>
                   <td>{equipo.dep_id}</td>
                   <td><button className="btn btn-primary"><FontAwesomeIcon icon={faEdit} onClick = {()=>{this.seleccionarUsuario(equipo); this.modalInsertar()}}/></button>

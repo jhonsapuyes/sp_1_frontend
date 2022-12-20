@@ -39,7 +39,7 @@ class PageTabla extends Component {
 
     peticionGet = () => {
       axios.get(url+ "/" + cookies.get('deporte_menu') + "/c").then(response => {
-        //console.log(response.data);
+        console.log(response.data);
         this.setState({data:response.data})
       }).catch(error => {
         console.log(error.message);
@@ -141,7 +141,7 @@ class PageTabla extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.data.map(marcador => {
+            {this.state.data.map((marcador) =>{
               return(
                 <tr key={marcador.mar_id}>
                   <td>{marcador.equi_id_1}</td> 
@@ -154,8 +154,8 @@ class PageTabla extends Component {
                       <button className="btn btn-danger"><FontAwesomeIcon icon={faTrashAlt} onClick = {()=>{this.seleccionarUsuario(marcador); this.modalEliminar()}}/></button>
                   </td> 
                 </tr>
-              )
-            })}
+              );
+              })}
           </tbody>
           </table>
   

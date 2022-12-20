@@ -35,7 +35,7 @@ iniciarSesion=async()=>{
     
     await axios.get(url+"/"+name+"/"+pwd)
     .then(response=>{
-        //console.log(response.data)
+        console.log(response.data)
         return response.data
     }).then(response=>{
         if(response.length>0){

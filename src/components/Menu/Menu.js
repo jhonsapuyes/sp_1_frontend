@@ -44,9 +44,11 @@ class Menu extends Component{
     });
   }
 
-  activeItem = (deporte) =>{
+  activeItem = (id_deporte, deporte) =>{
     this.setState({deporte_menu: deporte});
+    this.setState({deporte_menu_id: id_deporte});
     cookies.set("deporte_menu" ,deporte,{path:"/"})
+    cookies.set("deporte_menu_id", id_deporte,{path:"/"})
     window.location.href='./PageDeporte';
   }
 
@@ -117,7 +119,7 @@ class Menu extends Component{
               <ul className="submenu_top" >
                   {this.state.data_deporte.map((evento) =>{ 
                     return (
-                      <li key={evento.dep_id} onClick={() => this.activeItem(`${evento.dep_nombre}`)}> <Link to='/PageDeporte'>{evento.dep_nombre}</Link> </li>
+                      <li key={evento.dep_id} onClick={() => this.activeItem(`${evento.dep_id}`, `${evento.dep_nombre}`)}> <Link to='/PageDeporte'>{evento.dep_nombre}</Link> </li>
                     )
                   })}
               </ul>

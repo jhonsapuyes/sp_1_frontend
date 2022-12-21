@@ -47,7 +47,7 @@ class PageUsuarios extends Component {
     }
   
     peticionPut = () => {
-      axios.put(url+field_id+this.state.form.usu_id,this.state.form).then(response => {
+      axios.put(url+"/"+this.state.form.usu_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
@@ -56,7 +56,7 @@ class PageUsuarios extends Component {
     }
   
     peticionDelete = () => {
-      axios.delete(url+field_id+this.state.form.usu_id).then(response => {
+      axios.delete(url+"/"+this.state.form.usu_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {

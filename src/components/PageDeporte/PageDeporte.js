@@ -44,7 +44,6 @@ class PageDeporte extends Component {
         };
     }
     peticionPost = async () => {
-        delete this.state.form.mar_id //esto borra el campo mar_id
         await axios.post(url, this.state.form).then(response => {
           this.modalInsertar()
           this.peticionGet()
@@ -62,7 +61,7 @@ class PageDeporte extends Component {
       }
     detectarDeporte(deporte){
         
-        if(deporte === "Fútbol"){
+        if(deporte === "Futbol"){
             this.setState({
                 img: "./assets/user.png",
             });
@@ -77,7 +76,7 @@ class PageDeporte extends Component {
         }
     }
     peticionGet = () => {
-        axios.get(url+ "/" + cookies.get('deporte_menu') + "/c/3").then(response => {
+        axios.get(url+ "/-1/" + cookies.get('deporte_menu_id') + "/3").then(response => {
           //console.log(response.data);
           this.setState({data:response.data})
         }).catch(error => {
@@ -96,8 +95,8 @@ class PageDeporte extends Component {
             [e.target.name]: e.target.value,  /// los nombres de los imputs deben ser iguales a los del arreglo
             mar_fecha_registro: this.state.today.toISOString(),
             mar_hora_registro: this.state.today.toLocaleTimeString('en-US'),
-            mar_dep_id: cookies.get('deporte_menu'),
-            mar_usu_id: cookies.get('usu_nombre'),
+            mar_dep_id: cookies.get('deporte_menu_id')*1,
+            mar_usu_id: cookies.get('usu_id')*1,
           }
         });
         console.log(this.state.form);  /// probar por consola lo que se guarda
@@ -107,6 +106,7 @@ class PageDeporte extends Component {
         this.detectarDeporte(cookies.get('deporte_menu'));
         this.peticionGet();
         this.peticionGetEquipos();
+        console.log(cookies.get('deporte_menu_id'))
     }
 
     render(){
@@ -115,7 +115,7 @@ class PageDeporte extends Component {
             <>
                 <main className="content_deporte">
                     <section className="info_deporte">
-                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >
+                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data.length+1} }); this.modalInsertar()}} >
                             <div className="icon_equipo"></div>
                             <div className="icon_vs"> vs </div>
                             <div className="icon_equipo"></div>
@@ -144,7 +144,7 @@ class PageDeporte extends Component {
                                 </tr>
                                 :
                                 <tr>
-                                    <td className="nombre_table left-nombre">{marcador.equi_id_1}</td>
+                                    <td className="nombre_table left-nombre">{marcador.equi1}</td>
                                     <td className="img_table"><img src={(marcador.equi_img_1)?marcador.equi_img_1:"./assets/Logo_default.png"}/></td>
                                     <td className="marcador_table">{marcador.mar_equi_1} - {marcador.mar_equi_2}</td>
                                     <td className="img_table" ><img  src={(marcador.equi_img_2)?marcador.equi_img_2:"./assets/Logo_default.png"}/></td>
@@ -180,7 +180,7 @@ class PageDeporte extends Component {
                   <option> </option>
                   {this.state.data_equipos.map((equipo) =>{ 
                     return (
-                      <option key={equipo.equi_id}  value={equipo.equi_nombre}><img src={`${equipo.equi_img}`}/>{equipo.equi_nombre}</option>
+                      <option key={equipo.equi_id}  value={(equipo.equi_id*1)}>{equipo.equi_nombre}</option>
                     )
                   })}
                 </select>
@@ -190,7 +190,7 @@ class PageDeporte extends Component {
                   <option selected> </option>
                   {this.state.data_equipos.map((equipo) =>{ 
                     return (
-                      <option key={equipo.equi_id}  value={equipo.equi_nombre}><img src={`${equipo.equi_img}`}/>{equipo.equi_nombre}</option>
+                      <option key={equipo.equi_id}  value={(equipo.equi_id)}>{equipo.equi_nombre}</option>
                     )
                   })}
                 </select>
@@ -201,13 +201,14 @@ class PageDeporte extends Component {
                 <label htmlFor="equi_id_2">Equipo 2</label>
                 <input className="form-control" type="text" name="equi_id_2" id="equi_id_2" onChange={this.handleChange} value = {form ? form.equi_id_2 : ''}></input>
                 <br />
-                */}
+                
                 <label htmlFor="equi_img_1">Logo 1</label>
                 <input className="form-control" type="url" name="equi_img_1" id="equi_img_1" onChange={this.handleChange} value = {form ? form.equi_img_1 : ''}></input>
                 <br />
                 <label htmlFor="equi_img_2">Logo 2</label>
                 <input className="form-control" type="url" name="equi_img_2" id="equi_img_2" onChange={this.handleChange} value = {form ? form.equi_img_2 : ''}></input>
                 <br />
+                */}
                 <label htmlFor="mar_equi_1">mar_equi_1</label>
                 <input className="form-control" type="text" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChange} value = {form ? form.mar_equi_1 : ''}></input>
                 <br />

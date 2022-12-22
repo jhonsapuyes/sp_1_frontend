@@ -63,15 +63,15 @@ class PageDeporte extends Component {
         
         if(deporte === "Futbol"){
             this.setState({
-                img: "./assets/user.png",
+                img: "./assets/user.webp",
             });
         }else if(deporte === "Tenis"){
             this.setState({
-                img: "./assets/user_tenis.png",
+                img: "./assets/user_tenis.webp",
             })
         }else{
             this.setState({
-                img: "./assets/user_default.png",
+                img: "./assets/user_default.webp",
             })
         }
     }
@@ -101,6 +101,17 @@ class PageDeporte extends Component {
         });
         console.log(this.state.form);  /// probar por consola lo que se guarda
       }
+      handleChangeNum = async e=>{  /// función para capturar los datos del usuario. Es en 2do plano debe ser asincrona
+        e.persist();
+        
+        await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
+          form:{
+            ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
+            [e.target.name]: parseInt(e.target.value),  /// los nombres de los imputs deben ser iguales a los del arreglo
+          }
+        });
+        console.log(this.state.form);  /// probar por consola lo que se guarda
+      }
     componentDidMount(){
         this.setState({deporte: cookies.get('deporte_menu')})
         this.detectarDeporte(cookies.get('deporte_menu'));
@@ -115,7 +126,7 @@ class PageDeporte extends Component {
             <>
                 <main className="content_deporte">
                     <section className="info_deporte">
-                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data.length+1} }); this.modalInsertar()}} >
+                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data.length+1000} }); this.modalInsertar()}} >
                             <div className="icon_equipo"></div>
                             <div className="icon_vs"> vs </div>
                             <div className="icon_equipo"></div>
@@ -138,13 +149,13 @@ class PageDeporte extends Component {
                           {this.state.data.map(marcador => {
                             return(
                                 <>
-                                {(this.state.data.length === 1)?
+                                {(this.state.data.length < 1)?
                                 <tr>
                                     <td className="marcador_table">No se encuentra resultados</td>
                                 </tr>
                                 :
                                 <tr>
-                                    <td className="nombre_table left-nombre">{marcador.equi1}</td>
+                                    <td className="nombre_table left-nombre">{marcador.equi_id_2}</td>
                                     <td className="img_table"><img src={(marcador.equi_img_1)?marcador.equi_img_1:"./assets/Logo_default.png"}/></td>
                                     <td className="marcador_table">{marcador.mar_equi_1} - {marcador.mar_equi_2}</td>
                                     <td className="img_table" ><img  src={(marcador.equi_img_2)?marcador.equi_img_2:"./assets/Logo_default.png"}/></td>
@@ -176,7 +187,7 @@ class PageDeporte extends Component {
                 <input className="form-control" type="text" name="mar_id" id="mar_id" readOnly onChange={this.handleChange} value = {form ? form.mar_id : this.state.data.length+1}></input>
                 <br />
                 <label htmlFor="equi_id_1">Equipo 1</label>
-                <select class="form-select" aria-label="Default select" name="equi_id_1" id="equi_id_1"  onChange={this.handleChange}>
+                <select class="form-select" aria-label="Default select" name="equi_id_1" id="equi_id_1"  onChange={this.handleChangeNum}>
                   <option> </option>
                   {this.state.data_equipos.map((equipo) =>{ 
                     return (
@@ -186,7 +197,7 @@ class PageDeporte extends Component {
                 </select>
                 <br/>
                 <label htmlFor="equi_id_2">Equipo 2</label>
-                <select class="form-select" aria-label="Default select" name="equi_id_2" id="equi_id_2"  onChange={this.handleChange}>
+                <select class="form-select" aria-label="Default select" name="equi_id_2" id="equi_id_2"  onChange={this.handleChangeNum}>
                   <option selected> </option>
                   {this.state.data_equipos.map((equipo) =>{ 
                     return (
@@ -210,10 +221,10 @@ class PageDeporte extends Component {
                 <br />
                 */}
                 <label htmlFor="mar_equi_1">mar_equi_1</label>
-                <input className="form-control" type="text" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChange} value = {form ? form.mar_equi_1 : ''}></input>
+                <input className="form-control" type="number" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChangeNum} value = {form ? form.mar_equi_1 : ''}></input>
                 <br />
                 <label htmlFor="mar_equi_2">mar_equi_1</label>
-                <input className="form-control" type="text" name="mar_equi_2" id="mar_equi_2" onChange={this.handleChange} value = {form ? form.mar_equi_2 : ''}></input>
+                <input className="form-control" type="number" name="mar_equi_2" id="mar_equi_2" onChange={this.handleChangeNum} value = {form ? form.mar_equi_2 : ''}></input>
                 <br />
                 <label htmlFor="mar_fecha_event">mar_fecha_event</label>
                 <input className="form-control" type="date" name="mar_fecha_event" id="mar_fecha_event" onChange={this.handleChange} value = {form ? form.mar_fecha_event : ''}></input>

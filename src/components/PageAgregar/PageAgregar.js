@@ -108,8 +108,7 @@ class PageAgregar extends Component {
         form: {
           equi_id: equipo.equi_id,
           equi_nombre: equipo.equi_nombre,
-          equi_img: equipo.equi_img,
-          dep_id: equipo.dep_id,
+          equi_img: equipo.equi_img
         }
       })
     }
@@ -168,9 +167,9 @@ class PageAgregar extends Component {
         <div className="App content_tabla" >
           <br /><br /><br />
           {(this.state.ventana === 'equipos') ?
-            <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{equi_id: this.state.data.length+10 }}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{equi_id: this.state.data.length+1000}}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
             :
-            <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{dep_id: this.state.data.length+1 }}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{dep_id: this.state.data.length+1000 }}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
           }
           <br /><br />
           <table className="table tabla">
@@ -236,6 +235,9 @@ class PageAgregar extends Component {
               <label htmlFor="equi_img">Logo</label>
               <input className="form-control" type="text" name="equi_img" id="equi_img" onChange={this.handleChange} value = {form ? form.equi_img : ''}></input>
               <br />
+              {
+                this.state.tipoModal === 'insertar' ?
+                <>
               <label htmlFor="dep_id">Deporte</label>
                 <select class="form-select" aria-label="Default select" name="dep_id" id="dep_id"  onChange={this.handleChange}>
                   <option> </option>
@@ -245,6 +247,11 @@ class PageAgregar extends Component {
                     )
                   })}
                 </select>
+                
+                </>
+                :
+                <></>
+              }
             </div>
             :
             <div>

@@ -16,26 +16,30 @@ class PageRegistro extends Component {
         data: [],
         form:{
             usu_nombre:'', 
-            usu_access:'User', 
+            usu_access:'', 
             usu_email:'',  
             usu_clave:'',
             usu_id:''
-        }
+        },
+
         
     }
 
-    peticionGet = () => {
+
+    peticionGet = async() => {
+        let cantidad
         axios.get(urlRegsitro).then(response => {
           //console.log(response.data);
           this.setState({data:response.data})
+          cantidad = response.data.length
+          this.setState({form:{usu_id:cantidad+1000,usu_access:'User'}})          
         }).catch(error => {
             console.log(error.message);
         })
-        this.setState({form:{usu_id: this.state.data.length+30}})
     }
 
     handleChange=async e=>{
-        //e.persist();
+        e.persist();
         await this.setState({
             form:{
                 ...this.state.form,
@@ -78,8 +82,7 @@ class PageRegistro extends Component {
     }
 
     componentDidMount(){
-        this.peticionGet();
-        
+        this.peticionGet();      
     }
 
     render() {

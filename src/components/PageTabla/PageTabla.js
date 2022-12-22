@@ -28,7 +28,7 @@ class PageTabla extends Component {
           equipo2: "",
           form:{
             mar_id: '',
-            mar_fecha_even: "",
+            mar_fecha_event: "",
             mar_fecha_registro: '',
             mar_hora_event: '',
             mar_hora_registro: '',
@@ -72,13 +72,28 @@ class PageTabla extends Component {
     }
   
     peticionPost = async () => {
-      await axios.post(url, this.state.form).then(response => {
-        this.modalInsertar()
-        this.peticionGet()
-      }).catch(error => {
-        console.log(error.message);
-      })
-      window.location.href='./PageTabla';
+        
+      let equi_1 = this.state.form.equi_id_1;
+      let equi_2 = this.state.form.equi_id_2;
+      let fecha = this.state.form.mar_fecha_event;
+      let hora = this.state.form.mar_hora_registro;
+      let puntaje_1 = this.state.form.mar_equi_1;
+      let puntaje_2 = this.state.form.mar_equi_2;
+
+      window.localStorage.setItem("tipo", true)
+      console.log(this.state.form)
+
+      if(equi_2 === undefined || equi_1 === undefined || fecha === undefined || this.state.form.mar_hora_event === undefined || puntaje_1 === undefined || puntaje_2 === undefined || hora === NaN || hora === "" || hora === false || hora === null){
+        alert('Se requieren todos los datos');
+          return "Algunos o Todos Los Estan Datos Vacios"
+      }else{
+        await axios.post(url, this.state.form).then(response => {
+          this.modalInsertar()
+          this.peticionGet()
+        }).catch(error => {
+          console.log(error.message);
+        })
+      }
     }
   
     peticionPut = () => {

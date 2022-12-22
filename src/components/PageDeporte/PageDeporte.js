@@ -19,6 +19,7 @@ class PageDeporte extends Component {
         this.state = {
             data: [],
             deporte: "fútbol",
+            data_allMarcadores: [],
             img: "./assets/user.png",
             data_equipos: [],
             modalInsertar: false,
@@ -28,9 +29,9 @@ class PageDeporte extends Component {
             today: new Date(),
             form:{
               mar_id: '',
-              mar_fecha_even: "",
+              mar_fecha_event: "",
               mar_fecha_registro: '',
-              mar_hora_event: '',
+              mar_hora_event: "",
               mar_hora_registro: '',
               equi_id_1: '',
               equi_id_2: '',
@@ -44,9 +45,34 @@ class PageDeporte extends Component {
         };
     }
     peticionPost = async () => {
-        await axios.post(url, this.state.form).then(response => {
-          this.modalInsertar()
-          this.peticionGet()
+        
+        let equi_1 = this.state.form.equi_id_1;
+        let equi_2 = this.state.form.equi_id_2;
+        let fecha = this.state.form.mar_fecha_event;
+        let hora = this.state.form.mar_hora_registro;
+        let puntaje_1 = this.state.form.mar_equi_1;
+        let puntaje_2 = this.state.form.mar_equi_2;
+
+        window.localStorage.setItem("tipo", true)
+        console.log(this.state.form)
+
+        if(equi_2 === undefined || equi_1 === undefined || fecha === undefined || this.state.form.mar_hora_event === undefined || puntaje_1 === undefined || puntaje_2 === undefined || hora === NaN || hora === "" || hora === false || hora === null){
+          alert('Se requieren todos los datos');
+            return "Algunos o Todos Los Estan Datos Vacios"
+        }else{
+          await axios.post(url, this.state.form).then(response => {
+            this.modalInsertar()
+            this.peticionGet()
+          }).catch(error => {
+            console.log(error.message);
+          })
+        }
+      }
+
+      peticionGetAllMarcadores = () => {
+        axios.get(url).then(response => {
+          //console.log(response.data);
+          this.setState({data_allMarcadores:response.data})
         }).catch(error => {
           console.log(error.message);
         })
@@ -79,6 +105,7 @@ class PageDeporte extends Component {
         axios.get(url+ "/-1/" + cookies.get('deporte_menu_id') + "/3").then(response => {
           //console.log(response.data);
           this.setState({data:response.data})
+          this.setState({form:{mar_hora_event: "00:00:00 PM"}})
         }).catch(error => {
           console.log(error.message);
         })
@@ -117,7 +144,9 @@ class PageDeporte extends Component {
         this.detectarDeporte(cookies.get('deporte_menu'));
         this.peticionGet();
         this.peticionGetEquipos();
-        console.log(cookies.get('deporte_menu_id'))
+        this.peticionGetAllMarcadores();
+        console.log(cookies.get('deporte_menu_id'));
+        console.log(this.state.form.mar_hora_event);
     }
 
     render(){
@@ -126,7 +155,7 @@ class PageDeporte extends Component {
             <>
                 <main className="content_deporte">
                     <section className="info_deporte">
-                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data.length+1000} }); this.modalInsertar()}} >
+                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data_allMarcadores.length+1000} }); this.modalInsertar()}} >
                             <div className="icon_equipo"></div>
                             <div className="icon_vs"> vs </div>
                             <div className="icon_equipo"></div>

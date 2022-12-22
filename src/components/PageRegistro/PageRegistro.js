@@ -5,34 +5,50 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Cookies from 'universal-cookie'
 import axios from 'axios'
 
-//import Cookies from 'universal-cookie'
 
 const urlRegsitro="http://localhost:9000/api/usuarios"
 
 
 const cookies = new Cookies();
 
-
 class PageRegistro extends Component {
     state={
+        data: [],
         form:{
             usu_nombre:'', 
-            usu_access:'User', 
+            usu_access:'', 
             usu_email:'',  
-            usu_clave:'' 
-        }
+            usu_clave:'',
+            usu_id:''
+        },
+
         
     }
 
+
+    peticionGet = async() => {
+        let cantidad
+        axios.get(urlRegsitro).then(response => {
+          //console.log(response.data);
+          this.setState({data:response.data})
+          cantidad = response.data.length
+          this.setState({form:{usu_id:cantidad+1000,usu_access:'User'}})          
+        }).catch(error => {
+            console.log(error.message);
+        })
+    }
+
     handleChange=async e=>{
-        //e.persist();
+        e.persist();
         await this.setState({
             form:{
                 ...this.state.form,
                 [e.target.name]:e.target.value
             }
         })
-        //console.log(this.state.form)
+        console.log(this.state.form)
+        cookies.set("prueba", this.state.form,{path:"/"})
+        window.localStorage.setItem("tipo", this.state.form.usu_nombre)
     }
 
     suscribirse=async()=>{
@@ -41,6 +57,8 @@ class PageRegistro extends Component {
         let email=this.state.form.usu_email
         let pwd=this.state.form.usu_clave
 
+        let id=this.state.form.usu_clave
+        
         if(name.length<=0 || pwd.length<=0 || acc.length<=0 || email.length<=0){
             alert('Se requieren todos los datos')
             return "Algunos o Todos Los Estan Datos Vacios"
@@ -48,12 +66,13 @@ class PageRegistro extends Component {
             cookies.set("usu_email",email,{path:"/"})
             cookies.set("usu_nombre",name,{path:"/"})
             cookies.set("usu_access",acc,{path:"/"})
+            cookies.set("usu_id",id, {path:"/"})
         }
-        
+
         await axios
-        .post(urlRegsitro,this.state.form)
+        .post(urlRegsitro, this.state.form)
         .then(response=>{
-            //console.log(response.data)
+            console.log(response.data)
             window.location.href='./'
         })
         .catch(error=>{
@@ -62,6 +81,9 @@ class PageRegistro extends Component {
 
     }
 
+    componentDidMount(){
+        this.peticionGet();      
+    }
 
     render() {
         return(

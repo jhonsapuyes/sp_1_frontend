@@ -9,6 +9,8 @@ import "./PageDeporte.css";
 
 const cookies = new Cookies();
 const url= "http://localhost:9000/api/marcadores";
+const url_equipo= "http://localhost:9000/api/equipos";
+
 
 class PageDeporte extends Component {
 
@@ -18,6 +20,7 @@ class PageDeporte extends Component {
             data: [],
             deporte: "fútbol",
             img: "./assets/user.png",
+            data_equipos: [],
             modalInsertar: false,
             modalEliminar: false,
             tipoModal:'',
@@ -41,7 +44,6 @@ class PageDeporte extends Component {
         };
     }
     peticionPost = async () => {
-        delete this.state.form.mar_id //esto borra el campo mar_id
         await axios.post(url, this.state.form).then(response => {
           this.modalInsertar()
           this.peticionGet()
@@ -50,24 +52,31 @@ class PageDeporte extends Component {
         })
       }
 
+      peticionGetEquipos = () => {
+        axios.get(url_equipo).then(response => {
+          this.setState({data_equipos:response.data})
+        }).catch(error => {
+          console.log(error.message);
+        })
+      }
     detectarDeporte(deporte){
         
-        if(deporte === "Fútbol"){
+        if(deporte === "Futbol"){
             this.setState({
-                img: "./assets/user.png",
+                img: "./assets/user.webp",
             });
         }else if(deporte === "Tenis"){
             this.setState({
-                img: "./assets/user_tenis.png",
+                img: "./assets/user_tenis.webp",
             })
         }else{
             this.setState({
-                img: "./assets/user_default.png",
+                img: "./assets/user_default.webp",
             })
         }
     }
     peticionGet = () => {
-        axios.get(url+ "/" + cookies.get('deporte_menu') + "/c/3").then(response => {
+        axios.get(url+ "/-1/" + cookies.get('deporte_menu_id') + "/3").then(response => {
           //console.log(response.data);
           this.setState({data:response.data})
         }).catch(error => {
@@ -86,8 +95,19 @@ class PageDeporte extends Component {
             [e.target.name]: e.target.value,  /// los nombres de los imputs deben ser iguales a los del arreglo
             mar_fecha_registro: this.state.today.toISOString(),
             mar_hora_registro: this.state.today.toLocaleTimeString('en-US'),
-            mar_dep_id: cookies.get('deporte_menu'),
-            mar_usu_id: cookies.get('usu_nombre'),
+            mar_dep_id: cookies.get('deporte_menu_id')*1,
+            mar_usu_id: cookies.get('usu_id')*1,
+          }
+        });
+        console.log(this.state.form);  /// probar por consola lo que se guarda
+      }
+      handleChangeNum = async e=>{  /// función para capturar los datos del usuario. Es en 2do plano debe ser asincrona
+        e.persist();
+        
+        await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
+          form:{
+            ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
+            [e.target.name]: parseInt(e.target.value),  /// los nombres de los imputs deben ser iguales a los del arreglo
           }
         });
         console.log(this.state.form);  /// probar por consola lo que se guarda
@@ -96,6 +116,8 @@ class PageDeporte extends Component {
         this.setState({deporte: cookies.get('deporte_menu')})
         this.detectarDeporte(cookies.get('deporte_menu'));
         this.peticionGet();
+        this.peticionGetEquipos();
+        console.log(cookies.get('deporte_menu_id'))
     }
 
     render(){
@@ -104,7 +126,7 @@ class PageDeporte extends Component {
             <>
                 <main className="content_deporte">
                     <section className="info_deporte">
-                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >
+                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data.length+1000} }); this.modalInsertar()}} >
                             <div className="icon_equipo"></div>
                             <div className="icon_vs"> vs </div>
                             <div className="icon_equipo"></div>
@@ -120,25 +142,34 @@ class PageDeporte extends Component {
                     <section className="tabla_deporte">
                         <h3>RESULTADOS</h3>
                         <table>
-                        {this.state.data.map(marcador => {
+                          <thead>
+
+                          </thead>
+                          <tbody>
+                          {this.state.data.map(marcador => {
                             return(
                                 <>
-                                {(this.state.data.length === 1)?
-                                <tr key={marcador.mar_id}>
+                                {(this.state.data.length < 1)?
+                                <tr>
                                     <td className="marcador_table">No se encuentra resultados</td>
                                 </tr>
                                 :
-                                <tr key={marcador.mar_id}>
-                                    <td className="nombre_table left-nombre">{marcador.equi_id_1}</td>
-                                    <td className="img_table"><img src={marcador.equi_img_1}/></td>
+                                <tr>
+                                    <td className="nombre_table left-nombre">{marcador.equi_id_2}</td>
+                                    <td className="img_table"><img src={(marcador.equi_img_1)?marcador.equi_img_1:"./assets/Logo_default.png"}/></td>
                                     <td className="marcador_table">{marcador.mar_equi_1} - {marcador.mar_equi_2}</td>
-                                    <td className="img_table" ><img  src={`${marcador.equi_img_2}`}/></td>
+                                    <td className="img_table" ><img  src={(marcador.equi_img_2)?marcador.equi_img_2:"./assets/Logo_default.png"}/></td>
                                     <td className="nombre_table right-nombre">{marcador.equi_id_2}</td>
                                 </tr>
                                 }
                                 </>
                             )
                         })}
+                          </tbody>
+                          <tfoot>
+
+                          </tfoot>
+                        
                         </table>
                         <hr/>
                             {(this.state.data.length === 1)?
@@ -156,22 +187,44 @@ class PageDeporte extends Component {
                 <input className="form-control" type="text" name="mar_id" id="mar_id" readOnly onChange={this.handleChange} value = {form ? form.mar_id : this.state.data.length+1}></input>
                 <br />
                 <label htmlFor="equi_id_1">Equipo 1</label>
+                <select class="form-select" aria-label="Default select" name="equi_id_1" id="equi_id_1"  onChange={this.handleChangeNum}>
+                  <option> </option>
+                  {this.state.data_equipos.map((equipo) =>{ 
+                    return (
+                      <option key={equipo.equi_id}  value={(equipo.equi_id*1)}>{equipo.equi_nombre}</option>
+                    )
+                  })}
+                </select>
+                <br/>
+                <label htmlFor="equi_id_2">Equipo 2</label>
+                <select class="form-select" aria-label="Default select" name="equi_id_2" id="equi_id_2"  onChange={this.handleChangeNum}>
+                  <option selected> </option>
+                  {this.state.data_equipos.map((equipo) =>{ 
+                    return (
+                      <option key={equipo.equi_id}  value={(equipo.equi_id)}>{equipo.equi_nombre}</option>
+                    )
+                  })}
+                </select>
+                <br/>
+                {/* <label htmlFor="equi_id_1">Equipo 1</label>
                 <input className="form-control" type="text" name="equi_id_1" id="equi_id_1" onChange={this.handleChange} value = {form ? form.equi_id_1 : ''}></input>
-                <br />
+                <br /> 
                 <label htmlFor="equi_id_2">Equipo 2</label>
                 <input className="form-control" type="text" name="equi_id_2" id="equi_id_2" onChange={this.handleChange} value = {form ? form.equi_id_2 : ''}></input>
                 <br />
+                
                 <label htmlFor="equi_img_1">Logo 1</label>
                 <input className="form-control" type="url" name="equi_img_1" id="equi_img_1" onChange={this.handleChange} value = {form ? form.equi_img_1 : ''}></input>
                 <br />
                 <label htmlFor="equi_img_2">Logo 2</label>
                 <input className="form-control" type="url" name="equi_img_2" id="equi_img_2" onChange={this.handleChange} value = {form ? form.equi_img_2 : ''}></input>
                 <br />
+                */}
                 <label htmlFor="mar_equi_1">mar_equi_1</label>
-                <input className="form-control" type="text" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChange} value = {form ? form.mar_equi_1 : ''}></input>
+                <input className="form-control" type="number" name="mar_equi_1" id="mar_equi_1" onChange={this.handleChangeNum} value = {form ? form.mar_equi_1 : ''}></input>
                 <br />
                 <label htmlFor="mar_equi_2">mar_equi_1</label>
-                <input className="form-control" type="text" name="mar_equi_2" id="mar_equi_2" onChange={this.handleChange} value = {form ? form.mar_equi_2 : ''}></input>
+                <input className="form-control" type="number" name="mar_equi_2" id="mar_equi_2" onChange={this.handleChangeNum} value = {form ? form.mar_equi_2 : ''}></input>
                 <br />
                 <label htmlFor="mar_fecha_event">mar_fecha_event</label>
                 <input className="form-control" type="date" name="mar_fecha_event" id="mar_fecha_event" onChange={this.handleChange} value = {form ? form.mar_fecha_event : ''}></input>

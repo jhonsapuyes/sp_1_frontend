@@ -44,9 +44,11 @@ class Menu extends Component{
     });
   }
 
-  activeItem = (deporte) =>{
+  activeItem = (id_deporte, deporte) =>{
     this.setState({deporte_menu: deporte});
+    this.setState({deporte_menu_id: id_deporte});
     cookies.set("deporte_menu" ,deporte,{path:"/"})
+    cookies.set("deporte_menu_id", id_deporte,{path:"/"})
     window.location.href='./PageDeporte';
   }
 
@@ -117,14 +119,14 @@ class Menu extends Component{
               <ul className="submenu_top" >
                   {this.state.data_deporte.map((evento) =>{ 
                     return (
-                      <li key={evento.dep_id} onClick={() => this.activeItem(`${evento.dep_nombre}`)}> <Link to='/PageDeporte'>{evento.dep_nombre}</Link> </li>
+                      <li key={evento.dep_id} onClick={() => this.activeItem(`${evento.dep_id}`, `${evento.dep_nombre}`)}> <Link to='/PageDeporte'>{evento.dep_nombre}</Link> </li>
                     )
                   })}
               </ul>
             </li>
           </ul>
           {this.state.logueado
-          ?<div className={`menu_item user_login ${this.state.menu} ${this.state.logueado}`}>
+          ?<div className={`user_login ${this.state.logueado}`}>
             <FontAwesomeIcon  onClick={this.userLogActive} icon={faCircleUser}/>
             <ul className={`submenu_login ${this.state.iconUser}`}>
                 <li className="submenu_header">{cookies.get('usu_nombre')}<br/> <span>{cookies.get('usu_access')}</span> </li>

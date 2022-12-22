@@ -37,7 +37,6 @@ class PageUsuarios extends Component {
     }
   
     peticionPost = async () => {
-      delete this.state.form.usu_id //esto borra el campo usu_id
       await axios.post(url, this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
@@ -47,7 +46,7 @@ class PageUsuarios extends Component {
     }
   
     peticionPut = () => {
-      axios.put(url+field_id+this.state.form.usu_id,this.state.form).then(response => {
+      axios.put(url+"/"+this.state.form.usu_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
@@ -56,7 +55,7 @@ class PageUsuarios extends Component {
     }
   
     peticionDelete = () => {
-      axios.delete(url+field_id+this.state.form.usu_id).then(response => {
+      axios.delete(url+"/"+this.state.form.usu_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {
@@ -109,7 +108,7 @@ class PageUsuarios extends Component {
       return (
         <div className="App content_tabla" >
           <br /><br /><br />
-          <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >Agregar Usuario</button>
+          <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{usu_id: this.state.data.length+1000}}); this.modalInsertar()}} >Agregar Usuario</button>
           <br /><br />
           <table className="table tabla">
           <thead>
@@ -159,7 +158,10 @@ class PageUsuarios extends Component {
                 <input className="form-control" type="text" name="usu_nombre" id="usu_nombre" onChange={this.handleChange} value = {form ? form.usu_nombre : ''}></input>
                 <br />
                 <label htmlFor="usu_access">Acesso</label>
-                <input className="form-control" type="text" name="usu_access" id="usu_access" onChange={this.handleChange} value = {form ? form.usu_access : ''}></input>
+                <select class="form-select" aria-label="Default select" name="usu_access" id="usu_access"  onChange={this.handleChange}>
+                    <option value="User">User</option>
+                    <option value="Admin">Admin</option>
+                </select>
                 <br />
               </div>
             </ModalBody>

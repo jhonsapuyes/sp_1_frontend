@@ -19,6 +19,7 @@ class PageAgregar extends Component {
         super(props);
         this.state = {
           data: [],
+          dataDeportes: [],
           modalInsertar: false,
           modalEliminar: false,
           tipoModal:'',
@@ -31,7 +32,6 @@ class PageAgregar extends Component {
         };
     }
 
-
     peticionGet = () => {
       axios.get(url+cookies.get('agregar_menu')).then(response => {
         this.setState({data:response.data})
@@ -39,10 +39,15 @@ class PageAgregar extends Component {
         console.log(error.message);
       })
     }
+    peticionGetDeportes = () => {
+      axios.get(url+"deportes").then(response => {
+        this.setState({dataDeportes:response.data})
+      }).catch(error => {
+        console.log(error.message);
+      })
+    }
   
     peticionPost = async () => {
-      (cookies.get('agregar_menu') === "deportes")?
-      delete this.state.form.dep_id: delete this.state.form.equi_id; //esto borra el campo mar_id
       await axios.post(url+cookies.get('agregar_menu'), this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
@@ -54,14 +59,14 @@ class PageAgregar extends Component {
   
     peticionPut = () => {
       (cookies.get('agregar_menu') === "deportes")?
-      axios.put(url+this.state.ventana+"/"+this.state.field_id+this.state.form.dep_id,this.state.form).then(response => {
+      axios.put(url+this.state.ventana+"/"+this.state.form.dep_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
       :
-      axios.put(url+this.state.ventana+"/"+this.state.field_id+this.state.form.equi_id,this.state.form).then(response => {
+      axios.put(url+this.state.ventana+"/"+this.state.form.equi_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
@@ -72,14 +77,14 @@ class PageAgregar extends Component {
   
     peticionDelete = () => {
       (cookies.get('agregar_menu') === "deportes")?
-      axios.delete(url+this.state.ventana+"/"+this.state.field_id+this.state.form.dep_id).then(response => {
+      axios.delete(url+this.state.ventana+"/"+this.state.form.dep_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
       :
-      axios.delete(url+this.state.ventana+"/"+this.state.field_id+this.state.form.equi_id).then(response => {
+      axios.delete(url+this.state.ventana+"/"+this.state.form.equi_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {
@@ -104,8 +109,7 @@ class PageAgregar extends Component {
         form: {
           equi_id: equipo.equi_id,
           equi_nombre: equipo.equi_nombre,
-          equi_img: equipo.equi_img,
-          dep_id: equipo.dep_id,
+          equi_img: equipo.equi_img
         }
       })
     }
@@ -118,8 +122,9 @@ class PageAgregar extends Component {
       this.setState({modalEliminar:!this.state.modalEliminar})
     }
   
-    handleChange = async e=>{
-      e.persist();     /// y por eso debemos especificar persistencia
+    handleChange = async e=>{  /// función para capturar los datos del usuario. Es en 2do plano debe ser asincrona
+      e.persist();
+       /// y por eso debemos especificar persistencia
       await this.setState({   /// await regresa la ejecución de la función asincrona despues de terminar
         form:{
           ...this.state.form, /// esta linea sirve para conservar los datos que ya tenia el arreglo
@@ -152,6 +157,7 @@ class PageAgregar extends Component {
     componentDidMount(){
       this.detectarAgregar(cookies.get('agregar_menu'));
       this.peticionGet();
+      this.peticionGetDeportes();
     }
   
     render(){  
@@ -161,15 +167,19 @@ class PageAgregar extends Component {
       return (
         <div className="App content_tabla" >
           <br /><br /><br />
-          <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar'}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+          {(this.state.ventana === 'equipos') ?
+            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{equi_id: this.state.data.length+1000}}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+            :
+            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{dep_id: this.state.data.length+1000 }}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+          }
           <br /><br />
           <table className="table tabla">
           <thead>
             {(this.state.ventana === 'equipos') ?
             <tr>
               <th>Equipo id</th>
-              <th>Equipo</th>
               <th>Logo</th>
+              <th>Equipo</th>
               <th>dep_id</th>
               <th>acciones</th>
             </tr>
@@ -187,7 +197,7 @@ class PageAgregar extends Component {
               return(
                 <tr key={equipo.equi_id}>
                   <td>{equipo.equi_id}</td>
-                  <td><img className="tabla_img" src={(equipo.equi_img)?equipo.equi_img:"./assets/Logo192.png"}/></td>
+                  <td><img className="tabla_img" src={(equipo.equi_img)?equipo.equi_img:"./assets/Logo_default.png"}/></td>
                   <td>{equipo.equi_nombre}</td>
                   <td>{equipo.dep_id}</td>
                   <td><button className="btn btn-primary"><FontAwesomeIcon icon={faEdit} onClick = {()=>{this.seleccionarUsuario(equipo); this.modalInsertar()}}/></button>
@@ -218,20 +228,31 @@ class PageAgregar extends Component {
             </ModalHeader>
             <ModalBody>
               {(this.state.ventana === 'equipos')?
+
               <div>
-              <label htmlFor="equi_id">ID</label>
-              {/*EN TODOS LOS VALUE ESTABA EL FALLO */}
-              <input className="form-control" type="text" name="equi_id" id="equi_id" readOnly onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_id : this.state.data.length+1}></input>
-              <br />
               <label htmlFor="equi_nombre">nombre</label>
               <input className="form-control" type="text" name="equi_nombre" id="equi_nombre" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_nombre : ''}></input>
               <br />
               <label htmlFor="equi_img">Logo</label>
               <input className="form-control" type="text" name="equi_img" id="equi_img" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.equi_img : ''}></input>
               <br />
+              {
+                this.state.tipoModal === 'insertar' ?
+                <>
               <label htmlFor="dep_id">Deporte</label>
-              <input className="form-control" type="text" name="dep_id" id="dep_id" onChange={this.handleChange} value = {this.state.form_equipo ? this.state.form_equipo.dep_id : ''}></input>
-              <br />
+                <select class="form-select" aria-label="Default select" name="dep_id" id="dep_id"  onChange={this.handleChange}>
+                  <option> </option>
+                  {this.state.dataDeportes.map((deporte) =>{ 
+                    return (
+                      <option key={deporte.dep_id}  value={deporte.dep_id}>{deporte.dep_nombre}</option>
+                    )
+                  })}
+                </select>
+                
+                </>
+                :
+                <></>
+              }
             </div>
             :
             <div>

@@ -8,8 +8,8 @@ import Cookies from 'universal-cookie'
 const cookies = new Cookies();
 //Imports - Menu
 
-const url= "http://localhost:9000/api/usuarios"
-const url_deportes= "http://localhost:9000/api/deportes";
+const url= "http://129.151.118.62:9000/api/usuarios"
+const url_deportes= "http://129.151.118.62:9000/api/deportes";
 //URL BD Deportes - para el Menu 
 
 class Menu extends Component{

@@ -31,11 +31,11 @@ render() {
             <Route path="/" element={<PageInicio/>}/>
             <Route path="/PageInicio" element={<PageInicio/>}/>
             <Route path="/PageDeporte" element={<PageDeporte/>}/>
-            <Route path="/PageSesion" element={ <PageSesion/>}/>
+            <Route path="/PageSesion" element={(cookies.get("usu_access")? <PageInicio/> : <PageSesion/> )}/>
             <Route path="/PageUsuarios" element={((cookies.get("usu_access") === "Admin")? <PageUsuarios/>: <PageInicio/> )}/>
             <Route path="/PageTabla" element={<PageTabla/>}/>
             <Route path="/PageAgregar" element={((cookies.get("usu_access") === "Admin")? <PageAgregar/>: <PageInicio/> )}/>
-            <Route path="/PageRegistro" element={<PageRegistro/>}/>
+            <Route path="/PageRegistro" element={(cookies.get("usu_access")? <PageInicio/> : <PageRegistro/> )}/>
             <Route path="*" element={<NoPage/>} />
           </Routes>
         </BrowserRouter>

@@ -8,8 +8,8 @@ import {faPen} from '@fortawesome/free-solid-svg-icons';
 import "./PageDeporte.css";
 
 const cookies = new Cookies();
-const url= "http://localhost:9000/api/marcadores";
-const url_equipo= "http://localhost:9000/api/equipos";
+const url= "http://129.151.118.62:9000/api/marcadores";
+const url_equipo= "http://129.151.118.62:9000/api/equipos";
 
 
 class PageDeporte extends Component {
@@ -53,20 +53,17 @@ class PageDeporte extends Component {
         let puntaje_1 = this.state.form.mar_equi_1;
         let puntaje_2 = this.state.form.mar_equi_2;
 
-        window.localStorage.setItem("tipo", true)
-        console.log(this.state.form)
-
         if(equi_2 === undefined || equi_1 === undefined || fecha === undefined || this.state.form.mar_hora_event === undefined || puntaje_1 === undefined || puntaje_2 === undefined || hora === NaN || hora === "" || hora === false || hora === null){
-          alert('Se requieren todos los datos');
-            return "Algunos o Todos Los Estan Datos Vacios"
-        }else{
-          await axios.post(url, this.state.form).then(response => {
-            this.modalInsertar()
-            this.peticionGet()
-          }).catch(error => {
-            console.log(error.message);
-          })
-        }
+           alert('Se requieren todos los datos');
+             return "Algunos o Todos Los Estan Datos Vacios"
+         }else{
+           await axios.post(url, this.state.form).then(response => {
+             this.modalInsertar()
+             this.peticionGet()
+           }).catch(error => {
+             console.log(error.message);
+           })
+         }
       }
 
       peticionGetAllMarcadores = () => {
@@ -139,6 +136,16 @@ class PageDeporte extends Component {
         });
         console.log(this.state.form);  /// probar por consola lo que se guarda
       }
+      selectBotonPage = () =>{
+        if(cookies.get('usu_id')){
+          let todosDatos = this.state.data_allMarcadores.length;
+          let incrementoId = this.state.data_allMarcadores[todosDatos-1].mar_id; 
+          this.setState({form:null, tipoModal:'insertar',form:{mar_id: incrementoId+1 } });
+          this.modalInsertar()
+        }else{
+          window.location.href="./PageSesion"; 
+        }
+      }
     componentDidMount(){
         this.setState({deporte: cookies.get('deporte_menu')})
         this.detectarDeporte(cookies.get('deporte_menu'));
@@ -146,7 +153,7 @@ class PageDeporte extends Component {
         this.peticionGetEquipos();
         this.peticionGetAllMarcadores();
         console.log(cookies.get('deporte_menu_id'));
-        console.log(this.state.form.mar_hora_event);
+
     }
 
     render(){
@@ -155,7 +162,7 @@ class PageDeporte extends Component {
             <>
                 <main className="content_deporte">
                     <section className="info_deporte">
-                        <article onClick={()=> {this.setState({form:null, tipoModal:'insertar',form:{mar_id: this.state.data_allMarcadores.length+1000} }); this.modalInsertar()}} >
+                        <article onClick={() => this.selectBotonPage()} >
                             <div className="icon_equipo"></div>
                             <div className="icon_vs"> vs </div>
                             <div className="icon_equipo"></div>
@@ -184,7 +191,7 @@ class PageDeporte extends Component {
                                 </tr>
                                 :
                                 <tr>
-                                    <td className="nombre_table left-nombre">{marcador.equi_id_2}</td>
+                                    <td className="nombre_table left-nombre">{marcador.equi_id_1}</td>
                                     <td className="img_table"><img src={(marcador.equi_img_1)?marcador.equi_img_1:"./assets/Logo_default.png"}/></td>
                                     <td className="marcador_table">{marcador.mar_equi_1} - {marcador.mar_equi_2}</td>
                                     <td className="img_table" ><img  src={(marcador.equi_img_2)?marcador.equi_img_2:"./assets/Logo_default.png"}/></td>

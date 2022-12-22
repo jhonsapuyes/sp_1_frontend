@@ -6,7 +6,8 @@ import Cookies from 'universal-cookie'
 
 const cookies = new Cookies();
 
-const url= "http://localhost:9000/api/usuarios"
+//const url= "http://localhost:9000/api/usuarios";
+const url= "http://129.151.118.62:9000/api/usuarios";
 
 class PageSesion extends Component {
   state={
@@ -32,29 +33,28 @@ iniciarSesion=async()=>{
     if(name.length<=0 || pwd.length<=0){
         alert('Se requieren todos los datos')
         return "Datos Vacios"
-    }
-    
-    await axios.get(url+"/"+name+"/"+pwd)
-    .then(response=>{
-        //console.log(response.data)
-        return response.data
-    }).then(response=>{
+    }else{
+      await axios.get(url+"/"+name+"/"+pwd)
+      .then(response=>{
+          //console.log(response.data)
+          return response.data
+      }).then(response=>{
         if(response.length>0){
-          var resp=response[0] // para evitar llamados tan largos con corchetes
-          cookies.set("usu_id",resp.usu_id,{path:"/"})/// el path es para que se puedan acceder de cualquier pagina
-          cookies.set("usu_email",resp.usu_email,{path:"/"})
-          cookies.set("usu_nombre",resp.usu_nombre,{path:"/"})
-          cookies.set("usu_access",resp.usu_access,{path:"/"})
-          window.location.href='./PageInicio'
-        }else{
-            alert("Verificar Usario y/o Clave")
-        }
-    })
-    .catch(error=>{
-        console.log(error)
-    })
-
+            var resp=response[0] // para evitar llamados tan largos con corchetes
+            cookies.set("usu_email",resp.usu_email,{path:"/"})
+            cookies.set("usu_nombre",resp.usu_nombre,{path:"/"})
+            cookies.set("usu_access",resp.usu_access,{path:"/"})
+            cookies.set("usu_id",resp.usu_id,{path:"/"})
+            window.location.href = "./"
+          }else{
+              alert("Verificar Usario y/o Clave")
+          }
+      })
+      .catch(error=>{
+          console.log(error)
+      })
     }
+}
 
     //render
     render(){
@@ -70,7 +70,7 @@ iniciarSesion=async()=>{
                     <input type="text" name="username" id='username' onChange={this.handleChange}></input>
                     <label htmlFor='password'>Contraseña</label>
                     <input type="password" name="password" id='password' onChange={this.handleChange}></input>
-                    <button className='boton-login' onClick={() => this.iniciarSesion()}>LOGIN</button>
+                    <p className='boton-login' onClick={() => this.iniciarSesion()}>LOGIN</p>
                   </form>
                   <p>¿Todavía no tienes una cuenta? <Link to="/PageRegistro">Regístrate</Link> </p>
                 </div>

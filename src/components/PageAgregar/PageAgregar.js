@@ -8,7 +8,7 @@ import "./PageAgregar.css";
 import Cookies from 'universal-cookie';
 
 
-const url= "http://localhost:9000/api/"
+const url= "http://129.151.118.62:9000/api/"
 
 
 const cookies = new Cookies();
@@ -65,13 +65,14 @@ class PageAgregar extends Component {
         console.log(error.message);
       })
       :
+      //console.log(url+this.state.ventana+"/"+this.state.form.equi_id)
       axios.put(url+this.state.ventana+"/"+this.state.form.equi_id,this.state.form).then(response => {
         this.modalInsertar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
-      window.location.href='./PageAgregar';
+      //window.location.href='./PageAgregar';
     }
   
     peticionDelete = () => {
@@ -83,13 +84,14 @@ class PageAgregar extends Component {
         console.log(error.message);
       })
       :
+      //console.log(url+this.state.ventana+"/"+this.state.form.equi_id)
       axios.delete(url+this.state.ventana+"/"+this.state.form.equi_id).then(response => {
         this.modalEliminar()
         this.peticionGet()
       }).catch(error => {
         console.log(error.message);
       })
-      window.location.href='./PageAgregar';
+      //window.location.href='./PageAgregar';
     }
   
   
@@ -152,6 +154,28 @@ class PageAgregar extends Component {
       }
     }
 
+    
+
+    selectBotonPage = () =>{
+      
+        console.log(this.state.data);
+        let todosDatos = this.state.data.length;
+        let incrementoId = this.state.data[todosDatos-1].equi_id; 
+        this.setState({form:null, tipoModal:'insertar',form:{equi_id: incrementoId+1 } });
+        this.modalInsertar()
+        console.log(this.state.form.equi_id)
+    }
+
+    selectBotonDeporte = () =>{
+      
+      console.log(this.state.dataDeportes);
+      let todosDatos = this.state.dataDeportes.length;
+      let incrementoId = this.state.dataDeportes[todosDatos-1].dep_id; 
+      this.setState({form:null, tipoModal:'insertar',form:{dep_id: incrementoId+1}});
+      this.modalInsertar()
+      console.log(this.state.form.dep_id)
+  }
+
     //se ejecuta cuando lo realiza
     componentDidMount(){
       this.detectarAgregar(cookies.get('agregar_menu'));
@@ -167,9 +191,9 @@ class PageAgregar extends Component {
         <div className="App content_tabla" >
           <br /><br /><br />
           {(this.state.ventana === 'equipos') ?
-            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{equi_id: this.state.data.length+1000}}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+            <button className="botn_borde" onClick={()=> this.selectBotonPage()} >{`Agregar Juego de ${this.state.ventana}`}</button>
             :
-            <button className="botn_borde" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{dep_id: this.state.data.length+1000 }}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.ventana}`}</button>
+            <button className="botn_borde" onClick={()=> this.selectBotonDeporte()}>{`Agregar Juego de ${this.state.ventana}`}</button>
           }
           <br /><br />
           <table className="table tabla">

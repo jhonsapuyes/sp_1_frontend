@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie'
 import axios from 'axios'
 
 
-const urlRegsitro="http://localhost:9000/api/usuarios"
+const urlRegsitro="http://129.151.118.62:9000/api/usuarios"
 
 
 const cookies = new Cookies();
@@ -24,15 +24,15 @@ class PageRegistro extends Component {
 
         
     }
-
-
     peticionGet = async() => {
         let cantidad
         axios.get(urlRegsitro).then(response => {
           //console.log(response.data);
           this.setState({data:response.data})
-          cantidad = response.data.length
-          this.setState({form:{usu_id:cantidad+1000,usu_access:'User'}})          
+          cantidad = response.data.length;
+          let todosDatos = this.state.data.length;
+          let incrementoId = this.state.data[todosDatos-1].usu_id; 
+          this.setState({form:null, tipoModal:'insertar',form:{usu_id: incrementoId+1, usu_access:'User' } });        
         }).catch(error => {
             console.log(error.message);
         })
@@ -46,7 +46,7 @@ class PageRegistro extends Component {
                 [e.target.name]:e.target.value
             }
         })
-        console.log(this.state.form)
+        console.log(this.state.form.usu_id)
         cookies.set("prueba", this.state.form,{path:"/"})
         window.localStorage.setItem("tipo", this.state.form.usu_nombre)
     }
@@ -78,9 +78,15 @@ class PageRegistro extends Component {
         .catch(error=>{
             console.log(error)
         })
-
     }
 
+    selectBotonPage = () =>{
+      
+        let todosDatos = this.state.data.length;
+        let incrementoId = this.state.data[todosDatos-1].usu_id; 
+        this.setState({form:null, tipoModal:'insertar',form:{usu_id: incrementoId+1 } });
+        this.modalInsertar()
+    }
     componentDidMount(){
         this.peticionGet();      
     }
@@ -100,7 +106,7 @@ class PageRegistro extends Component {
                 <input type="password" name="usu_clave" id='usu_clave' onChange={this.handleChange}></input>
                 <label htmlFor='usu_nombre'>Nombre</label>
                 <input type="text" name="usu_nombre" id='usu_nombre' onChange={this.handleChange}></input>
-                <button className='boton-login' onClick={() => this.suscribirse()}>Registrarse</button>
+                <p className='boton-login' onClick={() => this.suscribirse()}>Registrarse</p>
               </form>
               <p>¿Ya tienes una cuenta? <Link to="/PageSesion">Inicia sesión</Link> </p>
             </div>

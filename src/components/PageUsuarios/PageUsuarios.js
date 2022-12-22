@@ -7,7 +7,7 @@ import { Component } from 'react';
 import "./PageUsuarios.css";
 
 const field_id = '/usu_id/'
-const url= "http://localhost:9000/api/usuarios";
+const url= "http://129.151.118.62:9000/api/usuarios";
 
 class PageUsuarios extends Component {
     constructor(props) {
@@ -77,6 +77,15 @@ class PageUsuarios extends Component {
       })
     }
   
+    selectBotonPage = () =>{
+      
+      let todosDatos = this.state.data.length;
+      let incrementoId = this.state.data[todosDatos-1].usu_id; 
+      this.setState({form:null, tipoModal:'insertar',form:{usu_id: incrementoId+1 } });
+      this.modalInsertar()
+    
+    }
+
     modalInsertar = () =>{
       this.setState({modalInsertar:!this.state.modalInsertar})
     }
@@ -108,7 +117,7 @@ class PageUsuarios extends Component {
       return (
         <div className="App content_tabla" >
           <br /><br /><br />
-          <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{usu_id: this.state.data.length+1000}}); this.modalInsertar()}} >Agregar Usuario</button>
+          <button className="botn_borde" onClick={(() => this.selectBotonPage())} >Agregar Usuario</button>
           <br /><br />
           <table className="table tabla">
           <thead>

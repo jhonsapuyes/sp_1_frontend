@@ -9,8 +9,8 @@ import Cookies from 'universal-cookie'
 const cookies = new Cookies();
 
 const field_id = '/mar_id/'
-const url= "http://localhost:9000/api/marcadores";
-const url_equipo= "http://localhost:9000/api/equipos";
+const url= "http://129.151.118.62:9000/api/marcadores";
+const url_equipo= "http://129.151.118.62:9000/api/equipos";
 
 class PageTabla extends Component {
     constructor(props) {
@@ -141,6 +141,15 @@ class PageTabla extends Component {
       this.setState({modalInsertar:!this.state.modalInsertar})
     }
   
+    selectBotonPage = () =>{
+      
+        let todosDatos = this.state.data_allMarcadores.length;
+        let incrementoId = this.state.data_allMarcadores[todosDatos-1].mar_id; 
+        this.setState({form:null, tipoModal:'insertar',form:{mar_id: incrementoId+1 } });
+        this.modalInsertar()
+      
+    }
+
     modalEliminar = () =>{
       this.setState({modalEliminar:!this.state.modalEliminar})
     }
@@ -188,7 +197,7 @@ class PageTabla extends Component {
         <div className="App content_tabla" >
           <br /><br /><br />
           {cookies.get('usu_nombre')?
-                  <button className="btn btn-success" onClick={()=> {this.setState({form:null, tipoModal:'insertar', form:{mar_id: this.state.data_allMarcadores.length+1000}}); this.modalInsertar()}} >{`Agregar Juego de ${this.state.deporte}`}</button>
+                  <button className="botn_borde" onClick={(() => this.selectBotonPage())} >{`Agregar Juego de ${this.state.deporte}`}</button>
                   :
                   <></>
           }
